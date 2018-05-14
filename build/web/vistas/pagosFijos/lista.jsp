@@ -72,7 +72,8 @@
                                             out.println("<td>"+pagosFijos[i][2]+"</td>");
                                             out.println("<td>"+pagosFijos[i][3]+"</td>");
                                             out.println("<td>"+pagosFijos[i][4]+"</td>");
-                                            out.println("<td>"+pagosFijos[i][5]+"</td>");
+                                            DecimalFormat formatea = new DecimalFormat("###,###.##");
+                                            out.println("<td>"+"$ "+formatea.format(Float.parseFloat(pagosFijos[i][5]))+" M.N.</td>");
                                             out.println("<td>"+pagosFijos[i][6]+"</td>");
                                         %>
                                     <%}%>
@@ -110,7 +111,7 @@
                                             out.println("<td>"+pagosFijos[i][3]+"</td>");
                                             out.println("<td>"+pagosFijos[i][5]+"</td>");
                                             DecimalFormat formatea = new DecimalFormat("###,###.##");
-                                            out.println("<td>"+"$ "+formatea.format(Float.parseFloat(requisiciones[i][7]))+" M.N.</td>");
+                                            out.println("<td>"+"$ "+formatea.format(Float.parseFloat(pagosFijos[i][7]))+" M.N.</td>");
                                             out.println("<td>"+pagosFijos[i][9]+"</td>");
                                             out.println("<td>"+pagosFijos[i][12]+"</td>");
                                             

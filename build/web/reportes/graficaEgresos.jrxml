@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graficaEgresos" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="26fde3ee-876e-4e2a-8a37-6e2630cbbc92">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select
+
+		CASE
+			WHEN month(o.fechaCreacion)=1 THEN 'January'
+			WHEN month(o.fechaCreacion)=2 THEN 'February'
+			WHEN month(o.fechaCreacion)=3 THEN 'March'
+			WHEN month(o.fechaCreacion)=4 THEN 'April'
+			WHEN month(o.fechaCreacion)=5 THEN 'May'
+			WHEN month(o.fechaCreacion)=6 THEN 'June'
+			WHEN month(o.fechaCreacion)=7 THEN 'July'
+			WHEN month(o.fechaCreacion)=8 THEN 'August'
+			WHEN month(o.fechaCreacion)=9 THEN 'September'
+			WHEN month(o.fechaCreacion)=10 THEN 'October'
+			WHEN month(o.fechaCreacion)=11 THEN 'November'
+			WHEN month(o.fechaCreacion)=12 THEN 'December'
+		END as MES,
+		SUM(valorNumerico) from operacion o
+inner join pertenenciadevalores pv on o.idOperacion=pv.idOperacion
+inner join conceptooperacion co on co.idConceptoOperacion=pv.idConceptoOperacion
+where (o.idCatalogoOperacion=3  and pv.idConcepto=14)
+OR
+(o.idCatalogoOperacion=9  AND pv.idConcepto=28)
+OR
+(o.idCatalogoOperacion=11  AND pv.idConcepto=38)
+GROUP BY month(o.fechaCreacion)]]>
+	</queryString>
+	<field name="MES" class="java.lang.String"/>
+	<field name="SUM(valorNumerico)" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c161d24a-d764-43c8-a6db-919d556d798c" x="140" y="0" width="446" height="27"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Applied operations ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="5ef1f1ec-dc50-4832-8499-4fb75807fc07" mode="Transparent" x="25" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="50aa11ec-06b4-47a0-a80e-1edc68551f61" mode="Transparent" x="125" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Cost]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement uuid="f08b1d0a-6351-4f5b-9d21-72860d03233f" mode="Transparent" x="25" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="918308db-eb73-4601-a611-b661af4dce76" mode="Transparent" x="125" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUM(valorNumerico)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="364" splitType="Stretch">
+			<bar3DChart>
+				<chart>
+					<reportElement uuid="2a8f1932-d7a6-4de1-9e48-3b0622e4581d" x="25" y="18" width="710" height="331"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Applied Operations"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{MES}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{SUM(valorNumerico)}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+		</band>
+	</summary>
+</jasperReport>

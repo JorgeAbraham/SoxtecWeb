@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <context-param>
+        <param-name>host</param-name>
+        <param-value>http://localhost:8084/SoxtecWeb/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>CarpetaReportes</param-name>
+        <param-value>C:\\Program Soxtec\\ProgramasJava\\SoxtecWeb\\web\\reportes\\</param-value>
+    </context-param>
+    
+    
+    
+    <servlet>
+        <servlet-name>Servlet</servlet-name>
+        <servlet-class>Servlets.Servlet</servlet-class>
+       
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Servlet</servlet-name>
+        <url-pattern>/Servlet</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            120
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>vistas\index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

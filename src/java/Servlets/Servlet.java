@@ -8,6 +8,7 @@ package Servlets;
 
 
 
+import Controlador.Tickets.Tickets;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -86,56 +87,61 @@ public class Servlet extends HttpServlet {
                 
                 peticiones_web_servicio peticion=new peticiones_web_servicio();
                 peticion.setNombreVista(request.getParameter("controlador"));
-                
-                
-                
-                
                 peticion.setIdUsuario(idUsuario);
-                
                 peticion.getVistasPorNombre();
-               
+                
+                if (peticion.getControlador()==null){  //No coincide el login, vuelve a mostrar login
+                    
+                    if (request.getParameter("controlador").equals("ticketToken")){
+                          
+                        Tickets T=new Tickets();
+                        T.init( this , request, response, Base);
+                        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(this, request, response, "/vistas/tickets/ver.jsp");
                         
-                        
-                
-               
-
-              
-                
-                
-                
-                
-                try {
-                   try {
-                        try {
-                            try {
-                                    //Class userClass = Class.forName("Controlador.Acceso.Acceso");
-                                    Class userClass = Class.forName(peticion.getControlador());
-                                    Method metodo = userClass.getMethod("init",HttpServlet.class ,HttpServletRequest.class ,HttpServletResponse.class ,String.class );
-
-                                    Object instancia=userClass.newInstance();
-
-                                    metodo.invoke(instancia, this , request, response, Base);
-
-                                     //Method metodo2 = userClass.getMethod("out" );
-                                    Method metodo2 = userClass.getMethod( peticion.getMetodo() );
-                                    metodo2.invoke(   instancia    );
-
-                                } 
-                            catch (InstantiationException | IllegalAccessException ex) {
-                                Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } 
-                        catch (IllegalArgumentException | InvocationTargetException ex) {
-                            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } 
-                    catch (NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }else{
+                        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(this, request, response, "/");
                     }
-                } 
-                catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                    
+                    
                 }
+                else{
+                    try {
+                        try {
+                             try {
+                                 try {
+                                        //Class userClass = Class.forName("Controlador.Acceso.Acceso");
+                                        Class userClass = Class.forName(peticion.getControlador());
+                                        Method metodo = userClass.getMethod("init",HttpServlet.class ,HttpServletRequest.class ,HttpServletResponse.class ,String.class );
+
+                                        Object instancia=userClass.newInstance();
+
+                                        metodo.invoke(instancia, this , request, response, Base);
+
+                                         //Method metodo2 = userClass.getMethod("out" );
+                                        Method metodo2 = userClass.getMethod( peticion.getMetodo() );
+                                        metodo2.invoke(   instancia    );
+
+                                     } 
+                                 catch (InstantiationException | IllegalAccessException ex) {
+                                     Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                                 }
+                             } 
+                             catch (IllegalArgumentException | InvocationTargetException ex) {
+                                 Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                             }
+                         } 
+                         catch (NoSuchMethodException | SecurityException ex) {
+                             Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+                     } 
+                     catch (ClassNotFoundException ex) {
+                         Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                }
+                
+                
+                
+                
 
 
                 

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gastosAprovados" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bf388dee-28b7-4804-8eea-7812797df7a9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Program Soxtec\\ProgramasJava\\SoxtecWeb\\web\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+		cu.nombre,
+		(CASE WHEN c.idConcepto= 4 THEN co.valorTexto END) AS Desripcion,
+		(CASE WHEN c5.idConcepto= 2 THEN co5.valorFecha END) AS FechaSolicitud,
+		(CASE WHEN c4.idConcepto= 10 THEN co4.valorNumerico END) AS Monto,
+		(CASE WHEN c6.idConcepto= 3 THEN co6.valorFecha END) AS FechaPago,
+
+		(CASE WHEN c2.idConcepto= 5
+				THEN
+					(SELECT CONCAT(apellidoPaterno,' ',apellidoMaterno,' ',nombre) FROM persona WHERE idPersona = CAST(co2.valorTexto AS UNSIGNED))
+				END
+		) AS Usuario
+
+
+
+	FROM Operacion o
+
+
+	INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+	INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=4 )
+	INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv2 on (o.idOperacion=pv2.idOperacion)
+	INNER JOIN concepto c2 on c2.idConcepto = pv2.idConcepto   AND  (c2.idConcepto=5 )
+	INNER JOIN conceptooperacion co2 on co2.idConceptoOperacion = pv2.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv4 on (o.idOperacion=pv4.idOperacion)
+	INNER JOIN concepto c4 on c4.idConcepto = pv4.idConcepto   AND  (c4.idConcepto=10 )
+	INNER JOIN conceptooperacion co4 on co4.idConceptoOperacion = pv4.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv5 on (o.idOperacion=pv5.idOperacion)
+	INNER JOIN concepto c5 on c5.idConcepto = pv5.idConcepto   AND  (c5.idConcepto=2 )
+	INNER JOIN conceptooperacion co5 on co5.idConceptoOperacion = pv5.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+	INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=3 )
+	INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+
+
+	INNER JOIN operacioncuentas oc on (oc.idOperacion = o.idOperacion)
+	INNER JOIN cuentas cu on (cu.idCuentas = oc.idCuentas)
+	WHERE
+	(o.idCatalogoOperacion = 1 AND o.idEstadoOperacion=5)
+	AND
+	( o.fechaCreacion >= $P{fechaInicio} AND o.fechaCreacion <=$P{fechaFin} )
+	 GROUP BY o.idOperacion]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Desripcion" class="java.lang.String"/>
+	<field name="FechaSolicitud" class="java.sql.Timestamp"/>
+	<field name="Monto" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FechaPago" class="java.sql.Timestamp"/>
+	<field name="Usuario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="Monto_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Monto}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="57">
+			<staticText>
+				<reportElement uuid="30c48d31-5cb1-4f9c-bc03-f15eaa062d45" x="0" y="0" width="307" height="23"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[Reporte de Gastos Aprovados, sin pagar]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="6e592ace-5da1-447e-b654-04cdc19413b8" x="522" y="0" width="230" height="57"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\reporteFacturacion\\imagenes\\logoSoxtec.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="214a6f37-1551-477a-aa55-fe89a6e77540" x="45" y="23" width="158" height="25"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gastos del periodo]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="ddf77730-b849-4855-a4a2-acd007b7cf43" x="203" y="28" width="104" height="20"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4535e202-7e38-46c1-9684-ba175e851a8a" x="324" y="28" width="115" height="20"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4aefe9b5-a211-4992-b66c-cb12bfc16eec" x="0" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Catalogo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b765c6e-eeac-4c18-9766-591ee8ba475b" x="100" y="0" width="239" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40aac9de-7d89-4750-b0ec-21fb2b264f5e" x="339" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha Solicitud]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="be205261-9ba9-4803-8796-164ebb15dc14" x="439" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f69f0107-5dc9-4ab0-b021-a773be6169f7" x="539" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bde5e240-ef64-4ddb-977a-a55f10758649" x="639" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="b8229474-af7f-4257-ae7d-939723888fbf" mode="Transparent" x="100" y="0" width="239" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Desripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="058540a1-df43-4303-a209-1f6dd8d9bdac" x="339" y="0" width="100" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FechaSolicitud})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c9412537-b1a9-422a-a5cc-7ad708014376" x="439" y="0" width="100" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d5c3358f-145c-4316-9602-156ec82e2671" x="539" y="0" width="100" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FechaPago})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c9e9df9e-9a99-4998-8fad-2cf35a342a3d" x="639" y="0" width="100" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="272bc93b-db6f-4453-afe7-f2f728399d52" x="0" y="0" width="100" height="23"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="217">
+			<subreport>
+				<reportElement uuid="71d80268-0867-42a4-9c8a-bb5b48dbc1b2" x="0" y="11" width="752" height="206"/>
+				<subreportParameter name="fechaInicio">
+					<subreportParameterExpression><![CDATA[$P{fechaInicio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaFin">
+					<subreportParameterExpression><![CDATA[$P{fechaFin}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "gastosAprovados_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

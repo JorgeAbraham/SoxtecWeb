@@ -6,13 +6,11 @@
 package Controlador.Tickets;
 
 import Controlador.Controlador;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import serviciosBD.persona_servicio;
 import serviciosBD.ticket_servicio;
+import serviciosBD.usuario_servicio;
+import utilidadEmail.CorreoElectronico;
 
 /**
  *
@@ -43,12 +43,58 @@ public class Tickets extends Controlador {
     }
     
     
+    public void ticketToken(){
+        
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/tickets/ver.jsp");
+         
+         
+        
+    }
+    
+    
+    
     public void cambiarPropietarioTicket(){
-         String idPropietarioTicket=request.getParameter("idPropietarioTicket");
+        String idPropietarioTicket=request.getParameter("idPropietarioTicket");
         String numeroTicket=request.getParameter("numeroTicket2");
         
         ticket_servicio T=new ticket_servicio();
         String idTicket = T.actualizaPropietarioTicket(numeroTicket, idPropietarioTicket);
+        
+        
+        
+        String ticket[][]=T.getTicket(idTicket);
+        
+        
+        String Base=Servlet.getServletContext().getInitParameter("host");
+        String MailAuth=Servlet.getServletContext().getInitParameter("MailAuth");
+        String MailStartTLS=Servlet.getServletContext().getInitParameter("MailStartTLS");
+        String MailHost=Servlet.getServletContext().getInitParameter("MailHost");
+        String MailPort=Servlet.getServletContext().getInitParameter("MailPort");
+        String MailSoxtec=Servlet.getServletContext().getInitParameter("MailSoxtec");
+        String MailPassword=Servlet.getServletContext().getInitParameter("MailPassword");
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", MailAuth);
+        props.put("mail.smtp.starttls.enable", MailStartTLS);
+        props.put("mail.smtp.host", MailHost);
+        props.put("mail.smtp.port", MailPort);
+        utilidadEmail.CorreoElectronico CE=new CorreoElectronico( props,
+                                                        MailSoxtec, 
+                                                        MailPassword
+                                                    );
+        
+        usuario_servicio asignado=new usuario_servicio();
+        String asignados[][] = asignado.usuarioPorID(idPropietarioTicket);
+        
+        for (int i=0;i<asignados.length;i++){
+            
+            CE.enviaStartTLS(
+                                asignados[i][4],
+                                "Se te ha ASIGNADO SOX-TIC-"+ticket[0][5]+" "+ticket[0][1], 
+                                "Se te ha asignado un ticket: Contenido \n"+ticket[0][1]+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+ticket[0][5]
+                            );
+            
+        }
         
         
     }
@@ -105,6 +151,8 @@ public class Tickets extends Controlador {
             
         UUID uuid = UUID.randomUUID();
             
+        
+        
         String ticketAsignado=request.getParameter("ticketAsignado");
         String ticketConCopia=request.getParameter("ticketConCopia");
         String ticketTitulo=request.getParameter("ticketTitulo");
@@ -134,11 +182,74 @@ public class Tickets extends Controlador {
                           );
         
         
+        
+        
+        
         T.insertaTicketHistorial(idTicket, P.getIdPersona()+"");
         T.insertaTicketHistorial(idTicket, ticketConCopia);
-        
         T.insertaTicketConCopia(idTicket,  ticketConCopia);
-          
+        
+        
+        String Base=Servlet.getServletContext().getInitParameter("host");
+        String MailAuth=Servlet.getServletContext().getInitParameter("MailAuth");
+        String MailStartTLS=Servlet.getServletContext().getInitParameter("MailStartTLS");
+        String MailHost=Servlet.getServletContext().getInitParameter("MailHost");
+        String MailPort=Servlet.getServletContext().getInitParameter("MailPort");
+        String MailSoxtec=Servlet.getServletContext().getInitParameter("MailSoxtec");
+        String MailPassword=Servlet.getServletContext().getInitParameter("MailPassword");
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", MailAuth);
+        props.put("mail.smtp.starttls.enable", MailStartTLS);
+        props.put("mail.smtp.host", MailHost);
+        props.put("mail.smtp.port", MailPort);
+        utilidadEmail.CorreoElectronico CE=new CorreoElectronico( props,
+                                                        MailSoxtec, 
+                                                        MailPassword
+                                                    );
+        
+        usuario_servicio asignado=new usuario_servicio();
+        String asignados[][] = asignado.usuarioPorID(ticketAsignado);
+        
+        for (int i=0;i<asignados.length;i++){
+            
+            CE.enviaStartTLS(
+                                asignados[i][4],
+                                "Un nuevo ticket se te ha ASIGNADO SOX-TIC-"+uuid.toString()+" "+ticketTitulo, 
+                                "Se te ha asignado un ticket: Contenido \n"+ticketDescripcion+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+uuid.toString()
+                            );
+            
+        }
+        
+        
+        
+        usuario_servicio ticketCC=new usuario_servicio();
+        String usuarioTicketCC[][] = ticketCC.usuarioPorID(ticketConCopia);
+        
+        for (int i=0;i<usuarioTicketCC.length;i++){
+            
+            CE.enviaStartTLS(
+                                usuarioTicketCC[i][4],
+                                "Se te ha COPIADO en un ticket SOX-TIC-"+uuid.toString()+" "+ticketTitulo, 
+                                "Se te ha copiao un ticket: Contenido \n"+ticketDescripcion+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+uuid.toString()
+                            );
+            
+        }
+        
+        
+        
+        usuario_servicio usuarioTicket=new usuario_servicio();
+        String usuariosTicket[][] = usuarioTicket.usuarioPorID(ticketConCopia);
+        
+        for (int i=0;i<usuarioTicketCC.length;i++){
+            CE.enviaStartTLS(
+                                usuariosTicket[i][4],
+                                "Has creado un ticket SOX-TIC-"+uuid.toString()+" "+ticketTitulo, 
+                                "Has creado un ticket: Contenido \n"+ticketDescripcion+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+uuid.toString()
+                            );
+        }
+       
+        
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/tickets/lista.jsp"); 
           
           
@@ -154,6 +265,43 @@ public class Tickets extends Controlador {
         
         ticket_servicio T=new ticket_servicio();
         String idTicket = T.actualizaEstadoTicket(numeroTicket, idEstadoTicket);
+        
+        
+        String Base=Servlet.getServletContext().getInitParameter("host");
+        String MailAuth=Servlet.getServletContext().getInitParameter("MailAuth");
+        String MailStartTLS=Servlet.getServletContext().getInitParameter("MailStartTLS");
+        String MailHost=Servlet.getServletContext().getInitParameter("MailHost");
+        String MailPort=Servlet.getServletContext().getInitParameter("MailPort");
+        String MailSoxtec=Servlet.getServletContext().getInitParameter("MailSoxtec");
+        String MailPassword=Servlet.getServletContext().getInitParameter("MailPassword");
+        
+        String ticket[][]=T.getTicket(idTicket);
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", MailAuth);
+        props.put("mail.smtp.starttls.enable", MailStartTLS);
+        props.put("mail.smtp.host", MailHost);
+        props.put("mail.smtp.port", MailPort);
+        utilidadEmail.CorreoElectronico CE=new CorreoElectronico( props,
+                                                        MailSoxtec, 
+                                                        MailPassword
+                                                    );
+        
+        usuario_servicio asignado=new usuario_servicio();
+        String asignados[][] = asignado.usuarioPorID(ticket[0][8]);
+        
+        for (int i=0;i<asignados.length;i++){
+            
+            CE.enviaStartTLS(
+                                asignados[i][4],
+                                "Se te ha ASIGNADO SOX-TIC-"+ticket[0][5]+" "+ticket[0][1], 
+                                "Se te ha asignado un ticket: Contenido \n"+ticket[0][1]+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+ticket[0][5]
+                            );
+            
+        }
+        
+        
+        
         
     }
     

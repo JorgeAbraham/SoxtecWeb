@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gastosAprovados_subreport1" language="groovy" pageWidth="752" pageHeight="572" orientation="Landscape" columnWidth="752" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e51ee7e0-e69d-4d5b-a008-d8143f3bec30">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicio" class="java.lang.String"/>
+	<parameter name="fechaFin" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+		cu.nombre,
+		(CASE WHEN c.idConcepto= 4 THEN co.valorTexto END) AS Desripcion,
+		(CASE WHEN c5.idConcepto= 2 THEN co5.valorFecha END) AS FechaSolicitud,
+		SUM(CASE WHEN c4.idConcepto= 10 THEN co4.valorNumerico END) AS Monto,
+		(CASE WHEN c6.idConcepto= 3 THEN co6.valorFecha END) AS FechaPago,
+
+		(CASE WHEN c2.idConcepto= 5
+				THEN
+					(SELECT CONCAT(apellidoPaterno,' ',apellidoMaterno,' ',nombre) FROM persona WHERE idPersona = CAST(co2.valorTexto AS UNSIGNED))
+				END
+		) AS Usuario
+
+
+
+	FROM Operacion o
+
+
+	INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+	INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=4 )
+	INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv2 on (o.idOperacion=pv2.idOperacion)
+	INNER JOIN concepto c2 on c2.idConcepto = pv2.idConcepto   AND  (c2.idConcepto=5 )
+	INNER JOIN conceptooperacion co2 on co2.idConceptoOperacion = pv2.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv4 on (o.idOperacion=pv4.idOperacion)
+	INNER JOIN concepto c4 on c4.idConcepto = pv4.idConcepto   AND  (c4.idConcepto=10 )
+	INNER JOIN conceptooperacion co4 on co4.idConceptoOperacion = pv4.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv5 on (o.idOperacion=pv5.idOperacion)
+	INNER JOIN concepto c5 on c5.idConcepto = pv5.idConcepto   AND  (c5.idConcepto=2 )
+	INNER JOIN conceptooperacion co5 on co5.idConceptoOperacion = pv5.idConceptoOperacion
+
+	INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+	INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=3 )
+	INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+
+
+	INNER JOIN operacioncuentas oc on (oc.idOperacion = o.idOperacion)
+	INNER JOIN cuentas cu on (cu.idCuentas = oc.idCuentas)
+	WHERE
+	(o.idCatalogoOperacion = 1 AND o.idEstadoOperacion=3)
+
+	GROUP BY cu.idCuentas]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Desripcion" class="java.lang.String"/>
+	<field name="FechaSolicitud" class="java.sql.Timestamp"/>
+	<field name="Monto" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FechaPago" class="java.sql.Timestamp"/>
+	<field name="Usuario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<summary>
+		<band height="50">
+			<barChart>
+				<chart>
+					<reportElement uuid="6e5a8537-63f9-4683-9ee5-dcdc4f364726" x="125" y="15" width="534" height="185"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Gastos por Catalogo"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{nombre}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Monto}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+</jasperReport>

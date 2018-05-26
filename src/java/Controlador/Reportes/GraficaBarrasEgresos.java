@@ -60,5 +60,11 @@ public class GraficaBarrasEgresos extends Controlador {
         
             utilidadesWeb.utilidadWeb.imprimeEnHtmlReporteJasper(carpetaReportes+"reportePagoAplicadoPorSemana.jasper", response, ManejadorDeDatos.BD.getCon(), parameters );
         }
+        
+        if (  tipo.equals("4")   ){
+        
+            utilidadesWeb.utilidadWeb.imprimeEnHtmlReporteJasper(carpetaReportes+"reportePagoAplicadoPorSemana.jasper", response, ManejadorDeDatos.BD.getCon(), parameters );
+        }
+        
     }
 }

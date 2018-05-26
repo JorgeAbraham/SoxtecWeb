@@ -8,7 +8,30 @@
         <param-name>CarpetaReportes</param-name>
         <param-value>C:\\Program Soxtec\\ProgramasJava\\SoxtecWeb\\web\\reportes\\</param-value>
     </context-param>
-    
+    <context-param>
+        <param-name>MailAuth</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>MailStartTLS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>MailHost</param-name>
+        <param-value>mail.soxtec.com.mx</param-value>
+    </context-param>
+    <context-param>
+        <param-name>MailPort</param-name>
+        <param-value>26</param-value>
+    </context-param>
+    <context-param>
+        <param-name>MailSoxtec</param-name>
+        <param-value>no-reply@soxtec.com.mx</param-value>
+    </context-param>
+    <context-param>
+        <param-name>MailPassword</param-name>
+        <param-value>abgomez18</param-value>
+    </context-param>
     
     
     <servlet>

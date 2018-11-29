@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FormatoPuertasHOY" language="groovy" pageWidth="612" pageHeight="1440" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0adebfd-297f-43f0-a2dd-1ac4aa397f00">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1" mode="Opaque" forecolor="#000000" backcolor="#CCCCCC">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Defecto}.equals("OK")]]></conditionExpression>
+			<style forecolor="#009933"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[!$F{Defecto}.equals("OK")]]></conditionExpression>
+			<style forecolor="#FF0033"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="fechaIncial" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2018-07-31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFinal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Program Soxtec\\ProgramasJava\\SoxtecWeb\\web\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+
+				FechaInspeccion.idOperacion,
+				DATE_FORMAT(FechaInspeccion, '%d/%m/%Y') as FechaInspeccion,
+				HoraInspeccion,
+				Inspector,
+				NumeroParte,
+				vin,
+				serie,
+
+				(   CASE
+					WHEN Turno = 'Primero' THEN '1st'
+					WHEN Turno = 'Segundo' THEN '2nd'
+					WHEN Turno = 'Tercero' THEN '3rd'
+				END  )  AS Turno,
+
+
+
+				Linea,
+				( CASE WHEN Defecto IS NOT NULL THEN Defecto ELSE 'OK'  END  )  AS Defecto,
+				eo.idEstadoOperacion ,
+				eo.Estado
+	FROM
+
+
+
+
+	(
+		SELECT o.idOperacion,    ( CASE WHEN c.idConcepto= 65 THEN co.valorFecha END  )  AS FechaInspeccion
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+		INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=65 )
+		INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+	) AS FechaInspeccion
+
+	INNER JOIN
+
+	(
+		SELECT o.idOperacion,(CASE WHEN c2.idConcepto= 66 THEN co2.valorTexto END) AS HoraInspeccion
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv2 on (o.idOperacion=pv2.idOperacion)
+		INNER JOIN concepto c2 on c2.idConcepto = pv2.idConcepto   AND  (c2.idConcepto=66 )
+		INNER JOIN conceptooperacion co2 on co2.idConceptoOperacion = pv2.idConceptoOperacion
+
+	) AS HoraInspeccion   ON FechaInspeccion.idOperacion  =  HoraInspeccion.idOperacion
+
+	INNER JOIN
+
+	(
+		SELECT o.idOperacion,(CASE WHEN c3.idConcepto= 67 THEN co3.valorTexto END)  , CONCAT(apellidoPaterno,' ', p.apellidoMaterno,' ', p.nombre) AS Inspector
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv3 on (o.idOperacion=pv3.idOperacion)
+		INNER JOIN concepto c3 on c3.idConcepto = pv3.idConcepto   AND  (c3.idConcepto=67 )
+		INNER JOIN conceptooperacion co3 on co3.idConceptoOperacion = pv3.idConceptoOperacion
+		INNER JOIN usuarios u on (u.idUsuarios = co3.valorTexto)
+		INNER JOIN Persona p on (p.idPersona = u.idPersona)
+
+	) AS Inspector    ON   FechaInspeccion.idOperacion  =  Inspector.idOperacion
+
+ 	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c4.idConcepto= 70 THEN co4.valorTexto END) AS NumeroParte
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv4 on (o.idOperacion=pv4.idOperacion)
+		INNER JOIN concepto c4 on c4.idConcepto = pv4.idConcepto   AND  (c4.idConcepto=70 )
+		INNER JOIN conceptooperacion co4 on co4.idConceptoOperacion = pv4.idConceptoOperacion
+
+	) AS NumeroParte   ON   NumeroParte.idOperacion  =  Inspector.idOperacion
+
+	INNER JOIN
+
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c5.idConcepto= 68 THEN co5.valorTexto END) AS Turno
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv5 on (o.idOperacion=pv5.idOperacion)
+		INNER JOIN concepto c5 on c5.idConcepto = pv5.idConcepto   AND  (c5.idConcepto=68 )
+		INNER JOIN conceptooperacion co5 on co5.idConceptoOperacion = pv5.idConceptoOperacion
+
+	)AS Turno  ON   Turno.idOperacion  =  Inspector.idOperacion
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 69 THEN co8.valorTexto END) AS Linea
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+		INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=69 )
+		INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+	)AS Linea 	ON   Turno.idOperacion  =  Linea.idOperacion
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c10.idConcepto= 79 THEN co10.valorTexto END) AS vin
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv10 on (o.idOperacion=pv10.idOperacion)
+		INNER JOIN concepto c10 on c10.idConcepto = pv10.idConcepto   AND  (c10.idConcepto=79 )
+		INNER JOIN conceptooperacion co10 on co10.idConceptoOperacion = pv10.idConceptoOperacion
+
+	)AS vin 	ON   vin.idOperacion =  Linea.idOperacion
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 80 THEN co8.valorTexto END) AS serie
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+		INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=80 )
+		INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+	)AS serie 	ON    vin.idOperacion =  serie.idOperacion
+
+
+	LEFT JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c6.idConcepto= 72 THEN co6.valorTexto END)AS Defecto ,  pv6.fila
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+		INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=72 )
+		INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+	)AS Defecto  ON   Defecto.idOperacion  = vin.idOperacion
+
+
+
+
+	INNER JOIN Operacion o  on (o.idOperacion = FechaInspeccion.idOperacion)
+	INNER JOIN estadooperacion eo on (eo.idEstadoOperacion = o.idEstadoOperacion)
+WHERE
+o.idCatalogoOperacion = 16 AND (o.idEstadoOperacion=19  )
+ORDER BY Turno,NumeroParte ASC]]>
+	</queryString>
+	<field name="idOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FechaInspeccion" class="java.lang.String"/>
+	<field name="HoraInspeccion" class="java.lang.String"/>
+	<field name="Inspector" class="java.lang.String"/>
+	<field name="NumeroParte" class="java.lang.String"/>
+	<field name="vin" class="java.lang.String"/>
+	<field name="serie" class="java.lang.String"/>
+	<field name="Turno" class="java.lang.String"/>
+	<field name="Linea" class="java.lang.String"/>
+	<field name="Defecto" class="java.lang.String"/>
+	<field name="idEstadoOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Estado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="Defecto_1" class="java.lang.Integer" resetType="Group" resetGroup="NumeroParte" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{Defecto}]]></variableExpression>
+	</variable>
+	<variable name="Defecto_2" class="java.lang.Integer" resetType="Group" resetGroup="Defecto" calculation="Count">
+		<variableExpression><![CDATA[$F{Defecto}]]></variableExpression>
+	</variable>
+	<variable name="Defecto_3" class="java.lang.Integer" resetType="Group" resetGroup="Turno" calculation="Count">
+		<variableExpression><![CDATA[$F{Defecto}]]></variableExpression>
+	</variable>
+	<variable name="Defecto_4" class="java.lang.Integer" resetType="Group" resetGroup="Turno" calculation="Sum">
+		<variableExpression><![CDATA[$F{Defecto}.equals("OK")?1:0]]></variableExpression>
+	</variable>
+	<variable name="Defecto_4_1" class="java.lang.Integer" resetType="Group" resetGroup="Turno" calculation="Sum">
+		<variableExpression><![CDATA[!$F{Defecto}.equals("OK")?1:0]]></variableExpression>
+	</variable>
+	<variable name="Defecto_5" class="java.lang.Integer" resetType="Group" resetGroup="Linea" calculation="Count">
+		<variableExpression><![CDATA[$F{Defecto}]]></variableExpression>
+	</variable>
+	<variable name="Defecto_5_1" class="java.lang.Integer" resetType="Group" resetGroup="Linea" calculation="Sum">
+		<variableExpression><![CDATA[$F{Defecto}.equals("OK")?1:0]]></variableExpression>
+	</variable>
+	<variable name="Defecto_5_1_2" class="java.lang.Integer" resetType="Group" resetGroup="Linea" calculation="Sum">
+		<variableExpression><![CDATA[!$F{Defecto}.equals("OK")?1:0]]></variableExpression>
+	</variable>
+	<group name="Linea">
+		<groupExpression><![CDATA[$F{Linea}]]></groupExpression>
+		<groupHeader>
+			<band height="36">
+				<textField>
+					<reportElement mode="Opaque" x="175" y="17" width="397" height="19" forecolor="#FFFFFF" backcolor="#001030" uuid="2c6169e0-683a-414a-bbfc-5bb44d235b85"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Linea}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="17" width="44" height="19" forecolor="#FFFFFF" backcolor="#001030" uuid="159f0371-52d3-4d67-84ee-7e4cad1416b4"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[LINE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="44" y="17" width="131" height="19" forecolor="#FFFFFF" backcolor="#001030" uuid="cd35bcc0-5f2d-4685-97e1-171c0f9d03d9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FechaInspeccion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="54">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="36" width="432" height="18" forecolor="#FFFFFF" backcolor="#001030" uuid="6ae337f5-e6fc-477a-9fc3-ddd6c4bb630b"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Inspected By Line:     ]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="432" y="36" width="140" height="18" forecolor="#FFFFFF" backcolor="#001030" uuid="794a7d06-8d28-475e-a031-37547eb35c05"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{Defecto_5}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="18" width="432" height="18" forecolor="#FF0000" backcolor="#001030" uuid="fceb4e78-1fd6-422a-9522-c4bf4cba3d34"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Inspected NOK:     ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="432" height="18" forecolor="#009900" backcolor="#001030" uuid="bd55ee58-0cb7-423f-b0c8-2dafe02cb6f9"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Inspected OK:     ]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="432" y="0" width="140" height="18" forecolor="#FFFFFF" backcolor="#001030" uuid="03a9e221-a42d-40c1-bd55-4dd2166b5afe"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{Defecto_5_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="432" y="18" width="140" height="18" forecolor="#FFFFFF" backcolor="#001030" uuid="a58deaab-05e1-40fb-8d59-fece7b30f213"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{Defecto_5_1_2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Turno">
+		<groupExpression><![CDATA[$F{Turno}]]></groupExpression>
+		<groupHeader>
+			<band height="12">
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="0" width="68" height="12" backcolor="#CCCCCC" uuid="b01d8de5-d4cb-49ce-b037-84f771e82313"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[SHIFT:]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="71" y="0" width="498" height="12" forecolor="#000000" backcolor="#CCCCCC" uuid="1ee7e283-7b5f-4d28-a169-ee74c3fad9f2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Turno}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="569" y="0" width="3" height="12" forecolor="#FFFFFF" backcolor="#001030" uuid="a747c77b-797b-4d9f-998a-32b0d8f4e818"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="3" height="12" forecolor="#FFFFFF" backcolor="#001030" uuid="822ceaa1-5ca9-4f3a-8256-6d4c57af327e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="36">
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="24" width="369" height="12" backcolor="#CCCCCC" uuid="3db6835e-93dc-44c1-a101-62cdb55bb384"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Total inspected per shift:     ]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="372" y="24" width="197" height="12" backcolor="#CCCCCC" uuid="6279d82f-89cb-4c6d-9f05-cb42e98a51dc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Defecto_3}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="3" height="36" forecolor="#FFFFFF" backcolor="#001030" uuid="123e2b1f-c124-48f2-8be4-e8a838a36032"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="569" y="0" width="3" height="36" forecolor="#FFFFFF" backcolor="#001030" uuid="9eb8e4f0-0e6d-472a-9632-71f222874475"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="372" y="0" width="197" height="12" backcolor="#CCCCCC" uuid="1de98c6d-1de5-41dc-84c0-cff245d83611"/>
+					<textElement textAlignment="Center">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Defecto_4}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="0" width="369" height="12" forecolor="#009900" backcolor="#CCCCCC" uuid="396537be-88fe-4c36-8182-67d41d219eb2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Inspected OK:     ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="12" width="369" height="12" forecolor="#FF0000" backcolor="#CCCCCC" uuid="e9a03c67-3734-4c95-a285-ddabb3a29fc9"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Inspected NOK:     ]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="372" y="12" width="197" height="12" backcolor="#CCCCCC" uuid="3a2fcfab-0d55-4c4c-897e-ad8a3127f2f9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Defecto_4_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="NumeroParte">
+		<groupExpression><![CDATA[$F{NumeroParte}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="d940c99b-02ff-4d0a-ad95-894d2771a96a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="6" y="0" width="266" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="06d543eb-b229-4056-830e-24c16432bc8f"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[Part Number]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="569" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="98551139-2ef6-4d19-a5ef-e7633092a732"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="272" y="0" width="294" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="e61a1c78-1a16-4542-9cd1-501ab28766bb"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{NumeroParte}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="4c1cac2d-67d2-4c72-85c3-c74f2d3212dd"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="566" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="f262be4a-2b1a-4bf5-8c09-7f76b0e4d70b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="3">
+				<staticText>
+					<reportElement mode="Opaque" x="6" y="0" width="560" height="3" forecolor="#FFFFFF" backcolor="#666666" uuid="46d7b468-3be1-42c8-a951-007fcf7bf3bc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="3" height="3" forecolor="#FFFFFF" backcolor="#001030" uuid="d462332f-e962-4a30-b146-6f47ab2c5926"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="569" y="0" width="3" height="3" forecolor="#FFFFFF" backcolor="#001030" uuid="d496e938-90f5-4d5a-ac92-a797cfd883f0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="0" width="3" height="3" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="7bb6e395-abad-4c35-85dc-191792c89da4"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="566" y="0" width="3" height="3" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="5ecb2cf4-f01d-4051-a6d1-f578f8b434ea"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Defecto">
+		<groupExpression><![CDATA[$F{Defecto}]]></groupExpression>
+		<groupFooter>
+			<band height="10">
+				<textField evaluationTime="Group" evaluationGroup="Defecto">
+					<reportElement mode="Opaque" x="499" y="0" width="64" height="10" backcolor="#CCCCCC" uuid="29356a95-209e-4310-a103-bb66b1af6189"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Defecto_2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="46703679-2e74-4854-bd34-5299eae0ab3b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="569" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="f70bf742-3159-4674-ad1f-6ef304110332"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="6" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="6b9a42b1-83a7-4537-82e3-df03cc0bb79a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="563" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="ffa8c849-3318-4c77-b9c7-8b74cab57515"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="333" y="0" width="166" height="10" backcolor="#CCCCCC" uuid="1b8ce8a4-399f-4e9f-9be2-1f663c5a3523"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Number inspections by part number:  ]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="style1" mode="Opaque" x="130" y="0" width="203" height="10" backcolor="#CCCCCC" uuid="3d1c1af6-c6b4-481b-a143-ea7d82fa592e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Defecto}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="3" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="240db944-8e49-426c-b0b5-677705ce55a7"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="566" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="a2346d75-6243-4030-bd02-9775c3acf9c0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="9" y="0" width="121" height="10" backcolor="#CCCCCC" uuid="ea7406f3-633d-4cf0-869e-b69a29df4eb6"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Defect:   ]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="68" splitType="Stretch">
+			<image>
+				<reportElement x="378" y="0" width="194" height="55" uuid="68423ebf-aa74-43a6-afe4-439a9dfa4011"/>
+				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\reporteFacturacion\\imagenes\\logoSoxtec.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="27" y="13" width="263" height="42" uuid="5e0cd65b-7254-4c67-9124-7c5200203eb3"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DAILY INSPECTION REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="569" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="659b636d-66d7-49df-806b-a36c56271485"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#001030" uuid="b59cf571-1859-4a26-a858-e7443731efec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="6" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="70b56568-656e-4633-9da3-7af9bd5919ec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="9" y="0" width="52" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="68fa1d21-4e5c-4b89-ba81-12ceac0101ba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Inspection]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="165" y="0" width="89" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="1fb4593c-f23d-413f-ba12-b7c5f4071aa8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HoraInspeccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="113" y="0" width="52" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="422910d9-59e6-4048-a8e1-baa5581ca7e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Time]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="61" y="0" width="52" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="94f1eba7-ad25-4aa8-a896-82149fde2cfa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idOperacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="563" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#666666" uuid="b4ab1c8f-ce99-4843-93fa-0568f555a3dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="fe34eebd-8f9b-4696-8541-aad85a841314"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="566" y="0" width="3" height="10" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="fa89c2b0-6b67-4194-95b7-aacda50d185c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="254" y="0" width="36" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="d0b2dbdb-f336-42ff-ab2f-05ddf61d599e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[VIN]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="290" y="0" width="100" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="9f250d53-6ed2-487f-bb8c-f7578072b9cd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="390" y="0" width="73" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="19551866-4901-430c-b09e-d22bebaf9da9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Serie]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="463" y="0" width="100" height="10" forecolor="#FFFFFF" backcolor="#999999" uuid="a920c5e5-e112-45da-a391-87386a5cec6b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

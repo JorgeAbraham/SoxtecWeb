@@ -2,10 +2,9 @@
 
 <div class="bw">
     <div class="dh">
-        
+
         <jsp:include page="menu.jsp" flush="true"/>
-        
-        
+       
         <div class="et bmj">
             
             <jsp:include page="menuSuperior.jsp" flush="true"/>

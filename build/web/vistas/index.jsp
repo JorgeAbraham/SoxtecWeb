@@ -1,8 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 13/11/2017, 07:04:43 PM
-    Author     : Abraham
---%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
@@ -26,11 +21,19 @@
 
         <!-- Custom styles for this template -->
         <link href="assets/css/signin.css" rel="stylesheet">
+        <script src="assets/js/jquery.min.js"></script>
         
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
         <style>
         body {
-            background-color: #234A8F;
+            background-color: #F0F0F0;
+            background-image: url(imagenes/world.png) ;
+            height: 100%;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
         }
         </style>
 
@@ -51,12 +54,12 @@
 
             <form class="form-signin" id="form1">
                   <img src="imagenes/logoSox.png"  width="300" height="80">
-                <h2 class="form-signin-heading text-white text-center">Soxtec Connecting</h2>
+                <h2 class="form-signin-heading text-center">Soxtec Connecting</h2>
                 <label for="inputEmail" class="sr-only">Usuario</label>
                 <input type="email" id="inputEmail" class="form-control" placeholder="User Name" required autofocus>
                 <label for="inputPassword" class="sr-only">Contraseña</label>
                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                <div class="checkbox text-white">
+                <div class="checkbox">
                     <label>
                         <input type="checkbox"  value="remember-me"> Remember me
                     </label>
@@ -64,7 +67,7 @@
                 <input type="button" id="submit" class="btn btn-lg btn-primary btn-block" value="Sign in" /> 
               
                 <p class="text-right">IntraNET.</p>
-              
+             
             </form>
 
         </div> <!-- /container -->

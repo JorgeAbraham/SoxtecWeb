@@ -40,16 +40,28 @@ public class Servlet extends HttpServlet {
         
         
         super.init(config);
-        
-        
-         M=new ManejadorDeDatos();
+        M=new ManejadorDeDatos();
      
         
         
         
     }
        
-       
+    public HttpSession SignInBD(String Email, String Pass, String idUsuario, HttpSession session ){
+        usuario_servicio servicioAcceso=new usuario_servicio();
+        idUsuario=servicioAcceso.acceso(Email, Pass);
+
+        if (idUsuario!=null){
+            if (!idUsuario.equals("")){
+                session.setAttribute("idUsuario", idUsuario );
+            }
+        }else{
+            System.out.println("Conexion Caida- Reconectando");
+            M=new ManejadorDeDatos();
+        }
+        
+        return session;
+    }
        
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,14 +78,12 @@ public class Servlet extends HttpServlet {
             HttpSession session = request.getSession();
             String idUsuario=(String)session.getAttribute("idUsuario");
             
-            if (idUsuario==null){ //Si NO HAY SESSION LA CREA
+            if (idUsuario==null){ //Si NO HAY, SESSION LA CREA
                 String inputEmail=request.getParameter("inputEmail");
                 String inputPassword=request.getParameter("inputPassword");
-                usuario_servicio servicioAcceso=new usuario_servicio();
-                idUsuario=servicioAcceso.acceso(inputEmail, inputPassword);
-                if (!idUsuario.equals("")){
-                    session.setAttribute("idUsuario", idUsuario );
-                }
+                
+                session=SignInBD(inputEmail,inputPassword,idUsuario,session);
+                     
                 
             }
             

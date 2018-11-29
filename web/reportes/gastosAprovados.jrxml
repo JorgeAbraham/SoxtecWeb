@@ -79,14 +79,14 @@
 	<title>
 		<band height="57">
 			<staticText>
-				<reportElement uuid="30c48d31-5cb1-4f9c-bc03-f15eaa062d45" x="0" y="0" width="307" height="23"/>
+				<reportElement x="0" y="0" width="307" height="23" uuid="30c48d31-5cb1-4f9c-bc03-f15eaa062d45"/>
 				<textElement textAlignment="Center">
 					<font fontName="Verdana" size="14"/>
 				</textElement>
-				<text><![CDATA[Reporte de Gastos Aprovados, sin pagar]]></text>
+				<text><![CDATA[Reporte de Gastos Aprobados, sin pagar]]></text>
 			</staticText>
 			<image>
-				<reportElement uuid="6e592ace-5da1-447e-b654-04cdc19413b8" x="522" y="0" width="230" height="57"/>
+				<reportElement x="522" y="0" width="230" height="57" uuid="6e592ace-5da1-447e-b654-04cdc19413b8"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -97,21 +97,21 @@
 				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\reporteFacturacion\\imagenes\\logoSoxtec.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement uuid="214a6f37-1551-477a-aa55-fe89a6e77540" x="45" y="23" width="158" height="25"/>
+				<reportElement x="45" y="23" width="158" height="25" uuid="214a6f37-1551-477a-aa55-fe89a6e77540"/>
 				<textElement>
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Gastos del periodo]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="ddf77730-b849-4855-a4a2-acd007b7cf43" x="203" y="28" width="104" height="20"/>
+				<reportElement x="203" y="28" width="104" height="20" uuid="ddf77730-b849-4855-a4a2-acd007b7cf43"/>
 				<textElement>
 					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="4535e202-7e38-46c1-9684-ba175e851a8a" x="324" y="28" width="115" height="20"/>
+				<reportElement x="324" y="28" width="115" height="20" uuid="4535e202-7e38-46c1-9684-ba175e851a8a"/>
 				<textElement>
 					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
@@ -122,7 +122,7 @@
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="4aefe9b5-a211-4992-b66c-cb12bfc16eec" x="0" y="0" width="100" height="20"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="4aefe9b5-a211-4992-b66c-cb12bfc16eec"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -134,7 +134,7 @@
 				<text><![CDATA[Catalogo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3b765c6e-eeac-4c18-9766-591ee8ba475b" x="100" y="0" width="239" height="20"/>
+				<reportElement x="100" y="0" width="239" height="20" uuid="3b765c6e-eeac-4c18-9766-591ee8ba475b"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -146,7 +146,7 @@
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="40aac9de-7d89-4750-b0ec-21fb2b264f5e" x="339" y="0" width="100" height="20"/>
+				<reportElement x="339" y="0" width="100" height="20" uuid="40aac9de-7d89-4750-b0ec-21fb2b264f5e"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -158,7 +158,7 @@
 				<text><![CDATA[Fecha Solicitud]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="be205261-9ba9-4803-8796-164ebb15dc14" x="439" y="0" width="100" height="20"/>
+				<reportElement x="439" y="0" width="100" height="20" uuid="be205261-9ba9-4803-8796-164ebb15dc14"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -170,7 +170,7 @@
 				<text><![CDATA[Monto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f69f0107-5dc9-4ab0-b021-a773be6169f7" x="539" y="0" width="100" height="20"/>
+				<reportElement x="539" y="0" width="100" height="20" uuid="f69f0107-5dc9-4ab0-b021-a773be6169f7"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -182,7 +182,7 @@
 				<text><![CDATA[Fecha Pago]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="bde5e240-ef64-4ddb-977a-a55f10758649" x="639" y="0" width="100" height="20"/>
+				<reportElement x="639" y="0" width="100" height="20" uuid="bde5e240-ef64-4ddb-977a-a55f10758649"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -198,7 +198,7 @@
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement uuid="b8229474-af7f-4257-ae7d-939723888fbf" mode="Transparent" x="100" y="0" width="239" height="23"/>
+				<reportElement mode="Transparent" x="100" y="0" width="239" height="23" uuid="b8229474-af7f-4257-ae7d-939723888fbf"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -212,7 +212,7 @@
 				<textFieldExpression><![CDATA[$F{Desripcion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="058540a1-df43-4303-a209-1f6dd8d9bdac" x="339" y="0" width="100" height="23"/>
+				<reportElement x="339" y="0" width="100" height="23" uuid="058540a1-df43-4303-a209-1f6dd8d9bdac"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -226,7 +226,7 @@
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FechaSolicitud})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c9412537-b1a9-422a-a5cc-7ad708014376" x="439" y="0" width="100" height="23"/>
+				<reportElement x="439" y="0" width="100" height="23" uuid="c9412537-b1a9-422a-a5cc-7ad708014376"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -240,7 +240,7 @@
 				<textFieldExpression><![CDATA[$F{Monto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d5c3358f-145c-4316-9602-156ec82e2671" x="539" y="0" width="100" height="23"/>
+				<reportElement x="539" y="0" width="100" height="23" uuid="d5c3358f-145c-4316-9602-156ec82e2671"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -254,7 +254,7 @@
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FechaPago})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c9e9df9e-9a99-4998-8fad-2cf35a342a3d" x="639" y="0" width="100" height="23"/>
+				<reportElement x="639" y="0" width="100" height="23" uuid="c9e9df9e-9a99-4998-8fad-2cf35a342a3d"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -268,7 +268,7 @@
 				<textFieldExpression><![CDATA[$F{Usuario}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="272bc93b-db6f-4453-afe7-f2f728399d52" x="0" y="0" width="100" height="23"/>
+				<reportElement x="0" y="0" width="100" height="23" uuid="272bc93b-db6f-4453-afe7-f2f728399d52"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -286,7 +286,7 @@
 	<summary>
 		<band height="217">
 			<subreport>
-				<reportElement uuid="71d80268-0867-42a4-9c8a-bb5b48dbc1b2" x="0" y="11" width="752" height="206"/>
+				<reportElement x="0" y="11" width="752" height="206" uuid="71d80268-0867-42a4-9c8a-bb5b48dbc1b2"/>
 				<subreportParameter name="fechaInicio">
 					<subreportParameterExpression><![CDATA[$P{fechaInicio}]]></subreportParameterExpression>
 				</subreportParameter>

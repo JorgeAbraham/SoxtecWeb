@@ -36,7 +36,7 @@
                 
             <ul class="nav nav-tabs">
                 <li class="active"><a class="btn btn-md bla blb" data-toggle="tab" href="#menu0">Ordenes de Compra <i class="fa fa-shopping-cart" style="font-size:24px"></i></a> </li>&nbsp;
-                <li><a class="btn btn-danger btn-md bla blb" data-toggle="tab" href="#menu1">Ordenes de Pago <i class="fa fa-handshake-o" style="font-size:24px"></i></a> </li>&nbsp;
+                <li><a class="btn btn-danger btn-md bla blb" data-toggle="tab" href="#menu1">Devolución de Pago <i class="fa fa-handshake-o" style="font-size:24px"></i></a> </li>&nbsp;
                 <li><a class="btn btn-info btn-md bla blb" data-toggle="tab" href="#menu2">Pagos Fijos <i class="fa fa-clock-o" style="font-size:24px"></i></a></li>&nbsp;
             </ul>
                 

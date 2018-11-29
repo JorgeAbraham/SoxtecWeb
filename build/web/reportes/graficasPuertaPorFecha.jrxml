@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" language="groovy" name="graficasPuertaPorFecha"  pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5fb1aec0-77ed-4ceb-886b-ee1314f4e3e7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaInicial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaFinal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+
+				FechaInspeccion.idOperacion,
+				FechaInspeccion,
+				Linea ,
+				( CASE WHEN Defecto IS NOT NULL THEN Defecto ELSE ''  END  )  AS Defecto,
+				COUNT(Linea)
+
+	FROM
+
+
+
+
+	(
+		SELECT o.idOperacion,    ( CASE WHEN c.idConcepto= 55 THEN co.valorFecha END  )  AS FechaInspeccion
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+		INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=55 )
+		INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+	) AS FechaInspeccion
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 57 THEN co8.valorTexto END) AS Linea
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+		INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=57 )
+		INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+	)AS Linea 	ON   FechaInspeccion.idOperacion  =  Linea.idOperacion
+
+	LEFT JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c6.idConcepto= 60 THEN co6.valorTexto END)AS Defecto ,  pv6.fila
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+		INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=60 )
+		INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+	)AS Defecto  ON   Defecto.idOperacion  =  Linea.idOperacion
+
+
+	INNER JOIN Operacion o  on (o.idOperacion = FechaInspeccion.idOperacion)
+	INNER JOIN estadooperacion eo on (eo.idEstadoOperacion = o.idEstadoOperacion)
+WHERE
+o.idCatalogoOperacion = 13 AND (o.idEstadoOperacion=19  )
+
+AND (  FechaInspeccion >= $P{FechaInicial}  AND   FechaInspeccion <= $P{FechaFinal}   )
+
+AND Defecto IS NOT NULL
+
+ GROUP BY FechaInspeccion,Linea
+ORDER BY FIELD(Linea,'LH','RH') ASC]]>
+	</queryString>
+	<field name="idOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FechaInspeccion" class="java.sql.Timestamp"/>
+	<field name="Linea" class="java.lang.String"/>
+	<field name="Defecto" class="java.lang.String"/>
+	<field name="COUNT(Linea)" class="java.lang.Long"/>
+	<summary>
+		<band height="292">
+			<timeSeriesChart>
+				<chart>
+					<reportElement x="0" y="0" width="572" height="292" uuid="67bf1c68-ccc0-4449-bfa4-6cbc6e39f11f"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<timeSeriesDataset>
+					<timeSeries>
+						<seriesExpression><![CDATA[$F{Linea}]]></seriesExpression>
+						<timePeriodExpression><![CDATA[$F{FechaInspeccion}]]></timePeriodExpression>
+						<valueExpression><![CDATA[$F{COUNT(Linea)}]]></valueExpression>
+					</timeSeries>
+				</timeSeriesDataset>
+				<timeSeriesPlot>
+					<plot/>
+					<timeAxisFormat>
+						<axisFormat tickLabelMask="dd/MM/yyyy"/>
+					</timeAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</timeSeriesPlot>
+			</timeSeriesChart>
+		</band>
+	</summary>
+</jasperReport>

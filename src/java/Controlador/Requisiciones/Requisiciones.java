@@ -9,11 +9,14 @@ import Controlador.Controlador;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import serviciosBD.documentos_servicio;
 import serviciosBD.operaciones_servicio;
+import serviciosBD.usuario_servicio;
+import utilidadEmail.CorreoElectronico;
 import utilidadesbasicas.archivoSerializableParaBD;
 
 /**
@@ -22,6 +25,11 @@ import utilidadesbasicas.archivoSerializableParaBD;
  */
 public class Requisiciones extends Controlador {
 
+    public final int montRequisicionesBajo=3000;
+    public final int montRequisicionesMedio=5000;
+    
+    
+    
     public void init(HttpServlet Servlet, HttpServletRequest request, HttpServletResponse response, String Base) {
         Control(Servlet, request, response, Base);
     }
@@ -189,6 +197,12 @@ public class Requisiciones extends Controlador {
         }
         
          
+        
+        
+        
+        
+        
+        
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=comprobarPago");
         
       
@@ -316,6 +330,84 @@ public class Requisiciones extends Controlador {
             }
             
         }
+        
+        
+        
+        
+        String Base=Servlet.getServletContext().getInitParameter("host");
+        String MailAuth=Servlet.getServletContext().getInitParameter("MailAuth");
+        String MailStartTLS=Servlet.getServletContext().getInitParameter("MailStartTLS");
+        String MailHost=Servlet.getServletContext().getInitParameter("MailHost");
+        String MailPort=Servlet.getServletContext().getInitParameter("MailPort");
+        String MailSoxtec=Servlet.getServletContext().getInitParameter("MailSoxtec");
+        String MailPassword=Servlet.getServletContext().getInitParameter("MailPassword");
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", MailAuth);
+        props.put("mail.smtp.starttls.enable", MailStartTLS);
+        props.put("mail.smtp.host", MailHost);
+        props.put("mail.smtp.port", MailPort);
+        utilidadEmail.CorreoElectronico CE=new CorreoElectronico( props,
+                                                        MailSoxtec, 
+                                                        MailPassword
+                                                    );
+        
+      
+        
+        String usuarioNombre=utilidadesWeb.utilidadWeb.valorDeVariablaDePeticionMultipart(peticion,"userName" );
+        String fechaEntrega=utilidadesWeb.utilidadWeb.valorDeVariablaDePeticionMultipart(peticion,"FechaEntrega" );
+        String descripcion=utilidadesWeb.utilidadWeb.valorDeVariablaDePeticionMultipart(peticion,"DescRazon" );
+        String total=utilidadesWeb.utilidadWeb.valorDeVariablaDePeticionMultipart(peticion,"Total" );
+        ArrayList<String> cantidad=utilidadesWeb.utilidadWeb.ArrayDeVariablaDePeticionMultipart(peticion, "Cantidad");
+        ArrayList<String> descripcionArticulo=utilidadesWeb.utilidadWeb.ArrayDeVariablaDePeticionMultipart(peticion, "DescripcioDeAriculo");
+        ArrayList<String> precioUnitario=utilidadesWeb.utilidadWeb.ArrayDeVariablaDePeticionMultipart(peticion, "PrecioUnitario");
+        ArrayList<String> importe=utilidadesWeb.utilidadWeb.ArrayDeVariablaDePeticionMultipart(peticion, "Importe");
+                
+        
+        
+        usuario_servicio enviarCorreoPerfilAdministrativo=new usuario_servicio();
+        String asignados[][]=new String[0][0];
+            
+        if (Double.parseDouble(total)  < montRequisicionesBajo  ){
+            asignados = enviarCorreoPerfilAdministrativo.emailPorIDPerfil("6");
+        }
+        if (Double.parseDouble(total)  >= montRequisicionesBajo && Double.parseDouble(total) < montRequisicionesMedio ){
+            asignados = enviarCorreoPerfilAdministrativo.emailPorIDPerfil("7");
+        }
+        if (Double.parseDouble(total)  >= montRequisicionesMedio  ){
+            asignados = enviarCorreoPerfilAdministrativo.emailPorIDPerfil("8");
+        }
+                
+        
+        
+        
+        
+        
+        String conceptos="";
+        for (int i=0;i<cantidad.size();i++){
+            conceptos=conceptos+cantidad.get(i)+"\t "+descripcionArticulo.get(i)+"\t "+precioUnitario.get(i)+"\t "+importe.get(i)+"\n ";
+        }
+            
+        
+        
+        //Se envia el Correo
+        for (int i=0;i<asignados.length;i++){
+            
+            CE.enviaStartTLS(
+                                asignados[i][0],
+                                usuarioNombre+" ha solicitado un nuevo requerimiento.", 
+                                "TE HEMOS ENVIADO UNA SOLICITUD POR FAVOR VERIFICA TU PORTAL EN INTRANET"
+                                
+                                /* usuarioNombre+" solicito: \nDescripción: \n"+" Numero de Operación: "+NumeroDeOperacion+"  Fecha de entrega: "+fechaEntrega+"    \n\n"+
+                                descripcion+"\n"+
+                                "Cantidad\t Descripción \t Precio Unitario \t Importe \n"+
+                                conceptos+
+                                "Total $"+total 
+                                */
+                            );
+            
+        }
+        
         
         
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=requisiciones");

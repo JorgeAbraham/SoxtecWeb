@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteInformacionFaltanteEmpleados" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a6e40d77-602a-410f-998a-596342ba89f0">
+	<property name="ireport.zoom" value="1.6105100000000012"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="New Dataset 1" uuid="d7c1d09b-d87e-45d0-8013-e61499741949">
+		<queryString language="SQL">
+			<![CDATA[SELECT
+	CONCAT(p.apellidoPaterno,' ',p.apellidoMaterno,' ',p.nombre ),
+	p.idPersona,
+	l.nombre,
+	vam.idVariableAlmacenamiento,
+	vam.nombre as NombreVariable   ,
+	IF( r2.idVariableAlmacenamiento IS NOT NULL, 1, 0)  AS ValorExiste    ,
+	IF( r2.idVariableAlmacenamiento IS NULL, 1, 0)  AS ValorNoExiste
+
+
+FROM persona p
+LEFT JOIN personalugar pl ON p.idPersona=pl.Persona_idPersona
+LEFT JOIN lugar l on pl.Lugar_idLugar=l.idLugar
+INNER JOIN variablealmacenamiento vam
+LEFT JOIN (
+	SELECT * FROM requisitos r
+    GROUP BY r.idPersona,r.idVariableAlmacenamiento
+) AS r2  ON r2.idPersona=p.idPersona AND r2.idVariableAlmacenamiento = vam.idVariableAlmacenamiento
+
+
+WHERE p.idTipoPersona=2 AND (vam.idRazonAlmacenamiento=1  OR vam.idRazonAlmacenamiento=2)
+-- GROUP BY p.idPersona
+ORDER BY p.idPersona, vam.idVariableAlmacenamiento]]>
+		</queryString>
+		<field name="CONCAT(p.apellidoPaterno,&apos; &apos;,p.apellidoMaterno,&apos; &apos;,p.nombre )" class="java.lang.String"/>
+		<field name="idPersona" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="nombre" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="idVariableAlmacenamiento" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="NombreVariable" class="java.lang.String"/>
+		<field name="ValorExiste" class="java.lang.Integer"/>
+		<field name="ValorNoExiste" class="java.lang.Integer"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[SELECT
+	CONCAT(p.apellidoPaterno,' ',p.apellidoMaterno,' ',p.nombre ),
+	p.idPersona,
+	l.nombre,
+	vam.idVariableAlmacenamiento,
+	vam.nombre as NombreVariable   ,
+	IF( r2.idVariableAlmacenamiento IS NOT NULL, 1, 0)  AS ValorExiste    ,
+	IF( r2.idVariableAlmacenamiento IS NULL, 1, 0)  AS ValorNoExiste
+
+
+FROM persona p
+LEFT JOIN personalugar pl ON p.idPersona=pl.Persona_idPersona
+LEFT JOIN lugar l on pl.Lugar_idLugar=l.idLugar
+INNER JOIN variablealmacenamiento vam
+LEFT JOIN (
+	SELECT * FROM requisitos r
+    GROUP BY r.idPersona,r.idVariableAlmacenamiento
+) AS r2  ON r2.idPersona=p.idPersona AND r2.idVariableAlmacenamiento = vam.idVariableAlmacenamiento
+
+
+WHERE p.idTipoPersona=2 AND (vam.idRazonAlmacenamiento=1  OR vam.idRazonAlmacenamiento=2)  AND r2.idVariableAlmacenamiento IS NULL
+-- GROUP BY p.idPersona
+ORDER BY p.idPersona, vam.idVariableAlmacenamiento]]>
+	</queryString>
+	<field name="CONCAT(p.apellidoPaterno,&apos; &apos;,p.apellidoMaterno,&apos; &apos;,p.nombre )" class="java.lang.String"/>
+	<field name="idPersona" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idVariableAlmacenamiento" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NombreVariable" class="java.lang.String"/>
+	<field name="ValorExiste" class="java.lang.Integer"/>
+	<field name="ValorNoExiste" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51">
+			<staticText>
+				<reportElement x="12" y="10" width="335" height="34" uuid="25ecd07f-7821-415c-b127-589961bb5cfb"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte Soxtec Empledos Información Faltante]]></text>
+			</staticText>
+			<image>
+				<reportElement x="424" y="10" width="133" height="34" uuid="604a84dd-7310-489c-9b70-09bc26f5a611"/>
+				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\Imagenes Presentacion\\Imagenes Reporte\\Soxtec.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="171" height="22" uuid="68454b12-ff6e-454c-9023-8ef68fc50653"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="0" width="176" height="22" uuid="bd520863-95ea-41f3-818c-e2a414b7c6ef"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Lugar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="0" width="152" height="22" uuid="4d69765f-eebc-4948-8b78-4e3968e3d5d6"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="499" y="0" width="73" height="22" uuid="1835eb01-0e47-47a5-bcd0-313a02a7462f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Existe]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="171" height="19" uuid="b6f7f2af-4107-4f61-a660-f2b1d2609c19"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONCAT(p.apellidoPaterno,' ',p.apellidoMaterno,' ',p.nombre )}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="0" width="176" height="19" uuid="03f9ea1e-fed5-4f23-be29-a4064d3e0399"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="0" width="152" height="19" uuid="0b7c708c-8b7d-494f-a59b-5a146b869c3d"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NombreVariable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="499" y="0" width="73" height="19" uuid="e8fe7924-b310-411b-937a-63d11cb219d9"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ValorExiste}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reciboDePago" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="10117c5e-7a60-4872-b23c-d2185d405114">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.lang.String"/>
+	<parameter name="semana" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="anio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	o.idOperacion
+	,o.idEstadoOperacion
+	,o.fechaCreacion
+	,o.fechaModificacion
+	,o.idusuarios
+	,valor0
+	,valor1
+	,valor2
+	,valor3
+	,valor4
+	,valor5
+	,valor6
+	,valor7.nombre
+	,valor7.lugar
+	,valor7.puesto
+	,valor7.numeroEmpleado
+
+FROM    Operacion o
+
+
+LEFT JOIN 	(      SELECT    o.idOperacion,(            IF(                c0.idConcepto = 124 , 		(                      IF (                        co0.valorTexto IS NOT NULL ,                        co0.valorTexto,                        IF (                            co0.valorNumerico IS NOT NULL ,                            co0.valorNumerico,                            IF (                                co0.valorFecha IS NOT NULL ,                                co0.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor0         FROM Operacion o        INNER JOIN pertenenciadevalores pv0 on (o.idOperacion=pv0.idOperacion)          INNER JOIN concepto c0 on c0.idConcepto = pv0.idConcepto   AND  (c0.idConcepto=124 )          INNER JOIN conceptooperacion co0 on co0.idConceptoOperacion = pv0.idConceptoOperacion      ) AS valor0   ON o.idOperacion  =  valor0.idOperacion
+
+
+LEFT JOIN 	(      SELECT    o.idOperacion,(            IF(                c1.idConcepto = 125 , 		(                      IF (                        co1.valorTexto IS NOT NULL ,                        co1.valorTexto,                        IF (                            co1.valorNumerico IS NOT NULL ,                            co1.valorNumerico,                            IF (                                co1.valorFecha IS NOT NULL ,                                co1.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor1         FROM Operacion o        INNER JOIN pertenenciadevalores pv1 on (o.idOperacion=pv1.idOperacion)          INNER JOIN concepto c1 on c1.idConcepto = pv1.idConcepto   AND  (c1.idConcepto=125 )          INNER JOIN conceptooperacion co1 on co1.idConceptoOperacion = pv1.idConceptoOperacion      ) AS valor1   ON o.idOperacion  =  valor1.idOperacion
+
+
+LEFT JOIN 	(      SELECT    o.idOperacion,(            IF(                c2.idConcepto = 126 , 		(                      IF (                        co2.valorTexto IS NOT NULL ,                        co2.valorTexto,                        IF (                            co2.valorNumerico IS NOT NULL ,                            co2.valorNumerico,                            IF (                                co2.valorFecha IS NOT NULL ,                                co2.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor2         FROM Operacion o        INNER JOIN pertenenciadevalores pv2 on (o.idOperacion=pv2.idOperacion)          INNER JOIN concepto c2 on c2.idConcepto = pv2.idConcepto   AND  (c2.idConcepto=126 )          INNER JOIN conceptooperacion co2 on co2.idConceptoOperacion = pv2.idConceptoOperacion      ) AS valor2   ON o.idOperacion  =  valor2.idOperacion
+
+
+LEFT JOIN 	(      SELECT  pv3.fila ,    o.idOperacion,(            IF(                c3.idConcepto = 128 , 		(                      IF (                        co3.valorTexto IS NOT NULL ,                        co3.valorTexto,                        IF (                            co3.valorNumerico IS NOT NULL ,                            co3.valorNumerico,                            IF (                                co3.valorFecha IS NOT NULL ,                                co3.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor3         FROM Operacion o        INNER JOIN pertenenciadevalores pv3 on (o.idOperacion=pv3.idOperacion)          INNER JOIN concepto c3 on c3.idConcepto = pv3.idConcepto   AND  (c3.idConcepto=128 )          INNER JOIN conceptooperacion co3 on co3.idConceptoOperacion = pv3.idConceptoOperacion      ) AS valor3   ON o.idOperacion  =  valor3.idOperacion
+
+
+LEFT JOIN 	(      SELECT  pv4.fila ,    o.idOperacion,(            IF(                c4.idConcepto = 129 , 		(                      IF (                        co4.valorTexto IS NOT NULL ,                        co4.valorTexto,                        IF (                            co4.valorNumerico IS NOT NULL ,                            co4.valorNumerico,                            IF (                                co4.valorFecha IS NOT NULL ,                                co4.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor4         FROM Operacion o        INNER JOIN pertenenciadevalores pv4 on (o.idOperacion=pv4.idOperacion)          INNER JOIN concepto c4 on c4.idConcepto = pv4.idConcepto   AND  (c4.idConcepto=129 )          INNER JOIN conceptooperacion co4 on co4.idConceptoOperacion = pv4.idConceptoOperacion      ) AS valor4   ON o.idOperacion  =  valor4.idOperacion
+
+
+LEFT JOIN 	(      SELECT  pv5.fila ,    o.idOperacion,(            IF(                c5.idConcepto = 130 , 		(                      IF (                        co5.valorTexto IS NOT NULL ,                        co5.valorTexto,                        IF (                            co5.valorNumerico IS NOT NULL ,                            co5.valorNumerico,                            IF (                                co5.valorFecha IS NOT NULL ,                                co5.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor5         FROM Operacion o        INNER JOIN pertenenciadevalores pv5 on (o.idOperacion=pv5.idOperacion)          INNER JOIN concepto c5 on c5.idConcepto = pv5.idConcepto   AND  (c5.idConcepto=130 )          INNER JOIN conceptooperacion co5 on co5.idConceptoOperacion = pv5.idConceptoOperacion      ) AS valor5   ON o.idOperacion  =  valor5.idOperacion
+
+
+LEFT JOIN 	(      SELECT  pv6.fila ,    o.idOperacion,(            IF(                c6.idConcepto = 131 , 		(                      IF (                        co6.valorTexto IS NOT NULL ,                        co6.valorTexto,                        IF (                            co6.valorNumerico IS NOT NULL ,                            co6.valorNumerico,                            IF (                                co6.valorFecha IS NOT NULL ,                                co6.valorFecha,NULL                            )                        )                    ) 		), 		NULL               )  	            ) AS valor6         FROM Operacion o        INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)          INNER JOIN concepto c6 on c6.idConcepto =  pv6.idConcepto   AND  (c6.idConcepto=131 )          INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion      ) AS valor6   ON o.idOperacion  =  valor6.idOperacion
+
+
+LEFT JOIN 	(
+	SELECT
+
+			o.idOperacion ,
+			CONCAT(p.nombre,' ',p.apellidoPaterno,' ',p.apellidoMaterno) as Nombre,
+			l.nombre as Lugar,
+			r.valorTexto as puesto,
+			p.idPersona as numeroEmpleado
+	FROM Operacion o
+	INNER JOIN pertenenciadevalores pv7 on (o.idOperacion=pv7.idOperacion)
+	INNER JOIN concepto c7 on c7.idConcepto =  pv7.idConcepto   AND  (c7.idConcepto=127 )
+	INNER JOIN conceptooperacion co7 on co7.idConceptoOperacion = pv7.idConceptoOperacion
+	INNER JOIN persona p on (p.idPersona = co7.valorTexto)
+	INNER JOIN personalugar pl on (pl.Persona_idPersona=p.idPersona)
+	INNER JOIN lugar l on (l.idLugar=pl.Lugar_idLugar)
+	INNER JOIN requisitos r on (r.idPersona = p.idPersona and r.idVariableAlmacenamiento=4)
+
+   ) AS valor7   ON o.idOperacion  =  valor7.idOperacion
+
+
+
+WHERE
+o.idCatalogoOperacion  IN (  22  )
+AND   o.idEstadoOperacion IN (19)
+AND valor1=$P{semana}
+AND valor2=$P{anio}
+AND      valor3.fila  = valor4.fila
+AND      valor4.fila  = valor5.fila
+AND      valor5.fila  = valor6.fila
+ORDER BY o.idOperacion DESC, o.fechaCreacion DESC    ;]]>
+	</queryString>
+	<field name="idOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idEstadoOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaCreacion" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaModificacion" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idusuarios" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor0" class="java.lang.String"/>
+	<field name="valor1" class="java.lang.String"/>
+	<field name="valor2" class="java.lang.String"/>
+	<field name="valor3" class="java.lang.String"/>
+	<field name="valor4" class="java.lang.String"/>
+	<field name="valor5" class="java.lang.String"/>
+	<field name="valor6" class="java.lang.Float"/>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lugar" class="java.lang.String"/>
+	<field name="puesto" class="java.lang.String"/>
+	<field name="numeroEmpleado" class="java.lang.Integer"/>
+	<variable name="valor6_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor6}]]></variableExpression>
+	</variable>
+	<variable name="valor6_2" class="java.lang.Float" resetType="Group" resetGroup="Operacion" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor6}]]></variableExpression>
+	</variable>
+	<group name="Operacion">
+		<groupExpression><![CDATA[$F{idOperacion}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement mode="Opaque" x="380" y="0" width="192" height="20" backcolor="#FFFFFF" uuid="08f19f3d-21a0-4019-a695-c254ce7713c0"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{valor6_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="148" height="20" backcolor="#FFFFFF" uuid="3999f5df-2ce4-4a2b-a08f-05b511eb939e"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="83">
+			<rectangle>
+				<reportElement x="380" y="0" width="192" height="53" uuid="8dc9688a-b160-4dd9-922c-ed7052694f31"/>
+			</rectangle>
+			<image>
+				<reportElement x="0" y="0" width="177" height="53" uuid="eb4a8caf-6919-4461-b600-6d7e694dcc20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\reporteFacturacion\\imagenes\\logoSoxtec.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="177" y="0" width="203" height="53" backcolor="#FFFF00" uuid="1bd2498b-cf94-44ac-9e6e-1b5198cf127b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nomina Total]]></text>
+			</staticText>
+			<image>
+				<reportElement x="391" y="15" width="172" height="38" uuid="7b29faa5-7319-490b-b57b-ae0009ca7a2e"/>
+				<imageExpression><![CDATA["C:\\Soxtec Admin\\Soxtec\\reporteFacturacion\\imagenes\\Banorte.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="53" width="95" height="20" backcolor="#CCCCFF" uuid="14e28f5d-54da-4dc4-a7fd-cf344d1b2011"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[ FECHA]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="477" y="53" width="95" height="20" backcolor="#CCCCFF" uuid="6e00e53e-15ed-4f03-af6d-596e512f99c5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="148" height="20" backcolor="#FFFFFF" uuid="559d87ad-c620-4577-8262-97041404046f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="148" y="0" width="116" height="20" backcolor="#FFFFFF" uuid="f08e143e-8f75-477e-9f9a-c1fd9c330057"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO TARJETA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="264" y="0" width="116" height="20" backcolor="#FFFFFF" uuid="14f0f6e4-d92c-4dcd-ac0d-0495e63c1e17"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="0" width="192" height="20" backcolor="#FFFFFF" uuid="80945e50-b077-42d1-bbc0-db3df09e0204"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<summary>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="236" y="0" width="144" height="20" backcolor="#FFFFFF" uuid="04dd6f97-2c6e-4162-ab85-6298e8d8c071"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[NOMINA TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="380" y="1" width="192" height="19" backcolor="#FFFF00" uuid="736ad231-a70d-44d2-a67b-8be4dd377090"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor6_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

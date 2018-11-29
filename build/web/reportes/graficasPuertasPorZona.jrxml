@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graficasPuertasPorZona" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e0f79cf8-720a-4579-9400-9e03acdb1eed">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaFinal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaInicial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ParametroLinea" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="limite" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TodosLosDefectos.Defecto, TodosLosDefectos.Zona, TodosLosDefectos.ZonaCuenta FROM
+(
+	SELECT
+
+				( CASE WHEN Defecto IS NOT NULL THEN Defecto ELSE ''  END  )  AS Defecto,
+				( CASE WHEN Zona IS NOT NULL THEN Zona ELSE '' END  )  AS Zona,
+				COUNT( CASE WHEN Zona IS NOT NULL THEN Zona ELSE ''  END  )  AS ZonaCuenta
+
+	FROM
+
+
+
+
+	(
+		SELECT o.idOperacion,    ( CASE WHEN c.idConcepto= 55 THEN co.valorFecha END  )  AS FechaInspeccion
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+		INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=55 )
+		INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+	) AS FechaInspeccion
+
+
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 57 THEN co8.valorTexto END) AS Linea
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+		INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=57 )
+		INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+	)AS Linea 	ON   FechaInspeccion.idOperacion  =  Linea.idOperacion
+
+	INNER JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 59 THEN co8.valorNumerico END) AS TotalInspeccion
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+		INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=59 )
+		INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+	)AS TotalInspeccion 	ON   TotalInspeccion.idOperacion  =  Linea.idOperacion
+
+	LEFT JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c6.idConcepto= 60 THEN co6.valorTexto END)AS Defecto ,  pv6.fila
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+		INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=60 )
+		INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+	)AS Defecto  ON   Defecto.idOperacion  =  Linea.idOperacion
+
+	LEFT JOIN
+
+	(
+
+		SELECT o.idOperacion,(CASE WHEN c7.idConcepto= 61 THEN co7.valorTexto END)AS Zona ,pv7.fila
+		FROM Operacion o
+		INNER JOIN pertenenciadevalores pv7 on (o.idOperacion=pv7.idOperacion)
+		INNER JOIN concepto c7 on c7.idConcepto = pv7.idConcepto   AND  (c7.idConcepto=61 )
+		INNER JOIN conceptooperacion co7 on co7.idConceptoOperacion = pv7.idConceptoOperacion
+
+	)AS Zona    ON   Zona.idOperacion  =  Linea.idOperacion AND Defecto.fila=Zona.fila
+
+
+	INNER JOIN Operacion o  on (o.idOperacion = FechaInspeccion.idOperacion)
+	INNER JOIN estadooperacion eo on (eo.idEstadoOperacion = o.idEstadoOperacion)
+
+
+WHERE
+
+
+o.idCatalogoOperacion = 13 AND (o.idEstadoOperacion=19  )
+
+AND (  FechaInspeccion >= $P{FechaInicial}  AND   FechaInspeccion <= $P{FechaFinal}  )
+
+ AND Defecto IS NOT NULL
+
+AND Linea = $P{ParametroLinea}
+
+ GROUP BY DEFECTO,ZONA
+
+)   AS TodosLosDefectos
+
+
+ INNER JOIN  (
+
+
+
+			SELECT Defecto FROM
+			(
+
+						SELECT
+
+									( CASE WHEN Defecto IS NOT NULL THEN Defecto ELSE ''  END  )  AS Defecto,
+									( CASE WHEN Zona IS NOT NULL THEN Zona ELSE '' END  )  AS Zona,
+									COUNT( CASE WHEN Zona IS NOT NULL THEN Zona ELSE ''  END  )  AS ZonaCuenta
+
+						FROM
+
+
+
+
+						(
+							SELECT o.idOperacion,    ( CASE WHEN c.idConcepto= 55 THEN co.valorFecha END  )  AS FechaInspeccion
+							FROM Operacion o
+							INNER JOIN pertenenciadevalores pv on (o.idOperacion=pv.idOperacion)
+							INNER JOIN concepto c on c.idConcepto = pv.idConcepto   AND  (c.idConcepto=55 )
+							INNER JOIN conceptooperacion co on co.idConceptoOperacion = pv.idConceptoOperacion
+
+						) AS FechaInspeccion
+
+
+
+						INNER JOIN
+
+						(
+
+							SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 57 THEN co8.valorTexto END) AS Linea
+							FROM Operacion o
+							INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+							INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=57 )
+							INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+						)AS Linea 	ON   FechaInspeccion.idOperacion  =  Linea.idOperacion
+
+						INNER JOIN
+
+						(
+
+							SELECT o.idOperacion,(CASE WHEN c8.idConcepto= 59 THEN co8.valorNumerico END) AS TotalInspeccion
+							FROM Operacion o
+							INNER JOIN pertenenciadevalores pv8 on (o.idOperacion=pv8.idOperacion)
+							INNER JOIN concepto c8 on c8.idConcepto = pv8.idConcepto   AND  (c8.idConcepto=59 )
+							INNER JOIN conceptooperacion co8 on co8.idConceptoOperacion = pv8.idConceptoOperacion
+
+						)AS TotalInspeccion 	ON   TotalInspeccion.idOperacion  =  Linea.idOperacion
+
+						LEFT JOIN
+
+						(
+
+							SELECT o.idOperacion,(CASE WHEN c6.idConcepto= 60 THEN co6.valorTexto END)AS Defecto ,  pv6.fila
+							FROM Operacion o
+							INNER JOIN pertenenciadevalores pv6 on (o.idOperacion=pv6.idOperacion)
+							INNER JOIN concepto c6 on c6.idConcepto = pv6.idConcepto   AND  (c6.idConcepto=60 )
+							INNER JOIN conceptooperacion co6 on co6.idConceptoOperacion = pv6.idConceptoOperacion
+
+						)AS Defecto  ON   Defecto.idOperacion  =  Linea.idOperacion
+
+						LEFT JOIN
+
+						(
+
+							SELECT o.idOperacion,(CASE WHEN c7.idConcepto= 61 THEN co7.valorTexto END)AS Zona ,pv7.fila
+							FROM Operacion o
+							INNER JOIN pertenenciadevalores pv7 on (o.idOperacion=pv7.idOperacion)
+							INNER JOIN concepto c7 on c7.idConcepto = pv7.idConcepto   AND  (c7.idConcepto=61 )
+							INNER JOIN conceptooperacion co7 on co7.idConceptoOperacion = pv7.idConceptoOperacion
+
+						)AS Zona    ON   Zona.idOperacion  =  Linea.idOperacion AND Defecto.fila=Zona.fila
+
+
+						INNER JOIN Operacion o  on (o.idOperacion = FechaInspeccion.idOperacion)
+						INNER JOIN estadooperacion eo on (eo.idEstadoOperacion = o.idEstadoOperacion)
+
+
+					WHERE
+
+
+					o.idCatalogoOperacion = 13 AND (o.idEstadoOperacion=19  )
+
+					AND (  FechaInspeccion >= $P{FechaInicial}  AND   FechaInspeccion <= $P{FechaFinal}   )
+
+					 AND Defecto IS NOT NULL
+
+					AND Linea = $P{ParametroLinea}
+
+					GROUP BY DEFECTO,ZONA
+					ORDER BY COUNT( CASE WHEN Zona IS NOT NULL THEN Zona ELSE ''  END  )  DESC
+
+			) AS CONTEODEFECTOS
+			GROUP BY Defecto
+			ORDER BY ZonaCuenta DESC
+			LIMIT $P!{limite}
+
+
+) As TOP5Defectos ON  TodosLosDefectos.Defecto = TOP5Defectos.Defecto]]>
+	</queryString>
+	<field name="Defecto" class="java.lang.String"/>
+	<field name="Zona" class="java.lang.String"/>
+	<field name="ZonaCuenta" class="java.lang.Long"/>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="22" y="11" width="83" height="7" uuid="c2477911-f951-458d-b4ec-a19d1bb68cd6"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Defecto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="11" width="68" height="7" uuid="f5cba2b7-190f-4af7-8d0d-e3ea5c9044e4"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Zona]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="11" width="95" height="7" uuid="c51e3f45-a56a-4efa-83bc-c9ba3f2e9040"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[ZonaCuenta]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="139" y="0" width="129" height="11" forecolor="#FFFFFF" backcolor="#000000" uuid="73042742-e861-4eb4-80aa-403316ddd87f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Zona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="22" y="0" width="117" height="11" forecolor="#FFFFFF" backcolor="#000000" uuid="409a874d-18c6-4851-8d73-0be17f648754"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Defecto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="7" splitType="Stretch">
+			<textField>
+				<reportElement x="173" y="0" width="95" height="7" uuid="e0985abf-aa7a-4c6e-abe1-b3372cfc0dc2"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ZonaCuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="0" width="68" height="7" uuid="bb92fa64-27ea-4621-b671-1327c8756f6a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Zona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="22" y="0" width="83" height="7" uuid="bf7a798f-6cee-4d75-a47a-67e4366c04cf"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Defecto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="117">
+			<barChart>
+				<chart isShowLegend="false">
+					<reportElement x="22" y="0" width="246" height="117" uuid="4b112197-fde5-4706-a35f-f159a0599723"/>
+					<chartTitle/>
+					<chartSubtitle>
+						<font size="8"/>
+					</chartSubtitle>
+					<chartLegend>
+						<font size="8"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["DEFECTO POR ZONA"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{Defecto}+" "+$F{Zona}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{ZonaCuenta}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal"/>
+					<itemLabel>
+						<font size="8"/>
+					</itemLabel>
+					<categoryAxisFormat>
+						<axisFormat>
+							<labelFont>
+								<font size="8"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="8"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat>
+							<labelFont>
+								<font size="6"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="8"/>
+							</tickLabelFont>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+</jasperReport>

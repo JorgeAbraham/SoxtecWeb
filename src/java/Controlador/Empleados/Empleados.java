@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import serviciosBD.ManejadorDeDatos;
 import serviciosBD.documentos_servicio;
 import serviciosBD.persona_servicio;
 import utilidadesWeb.utilidadWeb;
@@ -25,9 +26,16 @@ public class Empleados extends Controlador {
         Control(Servlet, request, response, Base);
     }
 
+    
+    
+    
+    
+    
     public void lista() {
-
+        
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/empleado/lista.jsp");
+        
+        
 
     }
 
@@ -37,15 +45,41 @@ public class Empleados extends Controlador {
 
     }
     
+    public void listaPorcentajeInformacionEmpleados(){
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/empleado/listaPorcentaje.jsp");
+    }
+    
+    public void reporteInformacionFaltante() {
+        
+        String carpetaReportes=Servlet.getServletContext().getInitParameter("CarpetaReportes");
+       
+        utilidadesWeb.utilidadWeb.imprimeEnHtmlReporteJasper(carpetaReportes+"reporteInformacionFaltanteEmpleados.jasper", response, ManejadorDeDatos.BD.getCon());
+    }
+    
+    
     public void crearEmpleado() {
 
         persona_servicio persona=new persona_servicio();
         
+      
+        
+    
         persona.setApellidoPaterno(request.getParameter("ApellidoPaterno"));
         persona.setApellidoMaterno(request.getParameter("ApellidoMaterno"));
         persona.setNombre(request.getParameter("Nombre"));
         persona.setIdTipoPersona(2); //Empleado
         String idPersona=persona.agregar();
+        
+        documentos_servicio documento=new documentos_servicio();
+        documento.insertaInformacion(
+                                        idPersona, 
+                                        "30", 
+                                        "1", //Texto Tipo de dato
+                                        "ingresado"
+                                    );            
+
+
+        
         
         persona.agregaPersonaLugar(request.getParameter("Lugar"), idPersona, "1");//Relacion Laboral
         
@@ -107,7 +141,7 @@ public class Empleados extends Controlador {
         documentos_servicio documento=new documentos_servicio();
         documento.insertaInformacion(
                                         request.getParameter("idPersonaEditarEstado"), 
-                                        "29", 
+                                        "30", 
                                         "1", //Texto Tipo de dato
                                         request.getParameter("valorEditar")
                                     );
@@ -116,7 +150,76 @@ public class Empleados extends Controlador {
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=empleadosPerfil&empleadoId="+request.getParameter("idPersonaEditarEstado")+"");
     }
     
+    public void solicitaBajaEmpleado() {
+        
+        documentos_servicio documento=new documentos_servicio();
+        documento.insertaInformacion(
+                                        request.getParameter("idPersonaPeticionBaja"), 
+                                        "30", 
+                                        "1", //Texto Tipo de dato
+                                        request.getParameter("valorEditarBaja")
+                                    );
+        
+        
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=empleadosPerfil&empleadoId="+request.getParameter("idPersonaPeticionBaja")+"");
+    }
     
+    
+    public void empleadoParoTecnico(){
+        
+        
+        String id="";
+        if (request.getParameter("valorEditarActivo")!=null){
+            if (request.getParameter("valorEditarActivo").equals("alta")){
+
+                documentos_servicio documento=new documentos_servicio();
+                documento.insertaInformacion(
+                                                request.getParameter("idPersonaActivo"), 
+                                                "30", 
+                                                "1", //Texto Tipo de dato
+                                                request.getParameter("valorEditarActivo")
+                                            );
+            }
+            
+            id=request.getParameter("idPersonaActivo");
+            
+        }
+        if (request.getParameter("valorEditarParoTecnico")!=null){
+            if (request.getParameter("valorEditarParoTecnico").equals("paroTecnico")){
+
+                documentos_servicio documento=new documentos_servicio();
+                documento.insertaInformacion(
+                                                request.getParameter("idPersonaParoTecnico"), 
+                                                "30", 
+                                                "1", //Texto Tipo de dato
+                                                request.getParameter("valorEditarParoTecnico")
+                                            );
+            }
+            
+            id=request.getParameter("idPersonaParoTecnico");
+        }
+        
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=empleadosPerfil&empleadoId="+id+"");
+    }
+        
+    
+    
+    public void   editaLugarEmpleado(){
+        
+        String id="";
+        String lugar="";
+        
+        
+        
+        id=request.getParameter("idPersonaEditarLugar");
+        lugar=request.getParameter("Lugar");
+        
+        persona_servicio persona=new persona_servicio();
+        
+        persona.editaLugarPersona(id, lugar);
+         
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=empleadosPerfil&empleadoId="+id+"");
+    }
     
     public void agregaIncidencia() {
         

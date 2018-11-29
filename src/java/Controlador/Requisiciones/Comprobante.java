@@ -9,11 +9,14 @@ import Controlador.Controlador;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import serviciosBD.documentos_servicio;
 import serviciosBD.operaciones_servicio;
+import serviciosBD.usuario_servicio;
+import utilidadEmail.CorreoElectronico;
 import utilidadesbasicas.archivoSerializableParaBD;
 
 /**
@@ -61,6 +64,12 @@ public class Comprobante extends Controlador {
         // Se inserta la relacion entre las operaciones 
         OP.insertaRelacionOperaciones(idOperacion, NumeroDeOperacion, "3");  //Relacion de Aplicación
      
+        
+        
+        
+        
+        
+        
         
         String BaseOperaciones[][] = OP.listaOperacionesBasePorTipo( "4" )   ;
         
@@ -167,6 +176,11 @@ public class Comprobante extends Controlador {
             }
             
         }
+        
+        
+        
+        
+        
         
          
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/Servlet?controlador=comprobarPago");

@@ -115,7 +115,8 @@
                                         
                                         persona_servicio empleados = new persona_servicio(Integer.parseInt(idUsuario));
                                         
-                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"text\"  class=\"col-md-6\" value=\""+empleados.getApellidoPaterno()+" "+empleados.getApellidoMaterno()+" "+empleados.getNombre()+"\"  disabled >";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" class=\"col-md-6\" value=\""+empleados.getApellidoPaterno()+" "+empleados.getApellidoMaterno()+" "+empleados.getNombre()+"\"  disabled >";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"hidden\" name=\"userName\" value=\""+empleados.getApellidoPaterno()+" "+empleados.getApellidoMaterno()+" "+empleados.getNombre()+"\"  >";
                                         plantillaDeTexto=plantillaDeTexto+"<input type=\"hidden\" name=\""+requisicionesForm[i][4]+"\" class=\"col-md-6\" value=\""+idUsuario+"\" >";
                                     }
                                     if (requisicionesForm[i][4].equals("PersonaReceptora")){
@@ -260,6 +261,11 @@
     
 
     function validacion() {
+        
+        document.getElementById("submit_value").value = "Enviando...";
+        document.getElementById("submit_value").disabled = true;
+        
+        
         var desc = document.getElementById("DescRazon").value;
         var total = document.getElementById("Total").value;
         var persona = document.getElementById("PersonaReceptora").value;

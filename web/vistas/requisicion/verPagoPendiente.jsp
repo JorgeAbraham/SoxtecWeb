@@ -20,7 +20,7 @@
             <jsp:include page="../menuSuperior.jsp" flush="true"/>
 
                     <div class="bkz aav aaj">
-                        <h3 class="bla blb">REVISIÓN DE ORDENES DE COMPRA</h3>
+                        <h3 class="bla blb">REVISIÓN DE Devolución de Pago</h3>
                     </div>
 
           

@@ -27,18 +27,31 @@
                 <h3 class="bla blb">Tickets</h3>
                 
                 <% String host=application.getInitParameter("host");  %>
-                <% String idUsuario=(String)session.getAttribute("idUsuario");  %>
+                <% 
+                    String USUARIO = request.getParameter("idUsuario");   
+                    String idUsuario=(String)session.getAttribute("idUsuario");
+                    if (USUARIO==null){
+                        idUsuario=(String)session.getAttribute("idUsuario");
+                    }else
+                    {
+                        idUsuario=USUARIO;
+                    }
+                %>
                 <% Date fechaActual = new Date(); %>
                 
               </div>
             
             
             <ul class="nav nav-tabs">
-                <li class="active"><a class="btn btn-primary btn-md bla blb" data-toggle="tab" href="#menu0">Nuevo <i class="fa fa-sticky-note-o" style="font-size:15px"></i></a></li>&nbsp;
-                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu1">Pendientes <i class="fa fa-question" style="font-size:15px"></i></a></li>&nbsp;
-                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu2">Resueltos <i class="fa fa-check" style="font-size:15px"></i></a></li>&nbsp;
-                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu3">Involucrado <i class="fa fa-users" style="font-size:15px"></i></a></li>&nbsp;
-                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu4">Historial <i class="fa fa-history" style="font-size:15px"></i></a></li>&nbsp;
+                <% 
+                    if (USUARIO==null){  %>
+                        <li class="active"><a class="btn btn-primary btn-md bla blb" data-toggle="tab" href="#menu0">Nuevo <i class="fa fa-sticky-note-o" style="font-size:15px"></i></a></li>&nbsp;
+                <%  }  %>
+                
+                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu1">Pendientes <span id="pendientes"></span><i class="fa fa-question" style="font-size:15px"></i></a></li>&nbsp;
+                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu2">Resueltos <span id="resueltos"></span><i class="fa fa-check" style="font-size:15px"></i></a></li>&nbsp;
+                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu3">Involucrado <span id="involucrados"></span><i class="fa fa-users" style="font-size:15px"></i></a></li>&nbsp;
+                <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu4">Historial <span id="historial"></span><i class="fa fa-history" style="font-size:15px"></i></a></li>&nbsp;
             </ul>
             
                 
@@ -87,11 +100,11 @@
                             </div>
                             <hr width="100%" />
                             <div class="col-md-12">
-                                <span class="col-md-12">Titulo</span>
+                                <span class="col-md-12">Asunto </span>
                                 <input type="text" name="ticketTitulo" id="ticketTitulo" class="col-md-12" >
                             </div>
                             <div class="col-md-12">
-                                <span class="col-md-12">Descripción</span>
+                                <span class="col-md-12">Contenido </span>
                                 <textarea name="ticketDescripcion" id="ticketDescripcion" rows="4" cols="50"  class="col-md-12"  ></textarea>
                             </div>
                             <div class="col-md-6">
@@ -103,6 +116,8 @@
                                             ticket_servicio ticket;
                                             ticket = new ticket_servicio();
                                             String tickets[][]=ticket.getPrioridadTicket();
+                                            
+
                                             %>
                                                 <option value="null"></option>
                                             <%
@@ -176,6 +191,8 @@
                                         ticket = new ticket_servicio();
                                         tickets=ticket.getListaTicketPorPersona(  empleados.getIdPersona()+"",estados );
                                     
+                                        int pendientes=tickets.length;
+                                        
                                         
 
                                     %>
@@ -238,6 +255,8 @@
                                         ticket = new ticket_servicio();
                                         tickets=ticket.getListaTicketPorPersona(  empleados.getIdPersona()+"",estados );
                                     
+                                        int resueltos=tickets.length;
+
                                     %>
                                         
                                     <%    for (int i=0;i<tickets.length;i++){   %>
@@ -291,6 +310,8 @@
                                         
                                         ticket = new ticket_servicio();
                                         tickets=ticket.getListaTicketPorPersonaTodos(empleados.getIdPersona()+"",estados );
+                                        
+                                        int involucrados=tickets.length;
                                     
                                     %>
                                         
@@ -350,6 +371,9 @@
                                         
                                         ticket = new ticket_servicio();
                                         tickets=ticket.getListaTicketPorPersonaTodos(empleados.getIdPersona()+"",estados );
+                                        
+                                        int historial=tickets.length;
+
                                     
                                     %>
                                         
@@ -509,7 +533,11 @@
                 <div class="modal-body">
 
                     <%
-                        empleados = new persona_servicio(Integer.parseInt(idUsuario));
+                        empleados = new persona_servicio(
+                                                            Integer.parseInt(
+                                                                                (String)session.getAttribute("idUsuario")
+                                                                            )
+                                                        );
                         empleados.get();
                         ticket = new ticket_servicio();
                         
@@ -544,7 +572,12 @@
     } 
    
    $(document).ready(function(){
-           
+       
+        $('#pendientes').html(<% out.print(pendientes);  %>);
+        $('#resueltos').html(<% out.print(resueltos); %>);
+        $('#involucrados').html(<% out.print(involucrados); %>);
+        $('#historial').html(<% out.print(historial); %>);
+        
    });
    
 
@@ -571,9 +604,14 @@
                         
                         var valores="";
                         
+                       
+                        
                         var i;
                         var j;
                         for (i = 0; i < count; i++) { 
+                            
+                            var re = /\n/g;
+                            var contenido = data[i][1].replace(re, "<br>");
                             
                             valores=valores+"<hr width=\"100%\" />";
                             
@@ -585,7 +623,8 @@
                                     valores=valores+data[i][7];
                                 valores=valores+"</i>";
                             valores=valores+"</div>";
-                            valores=valores+data[i][1]; 
+                            valores=valores+contenido;
+; 
                         }
                         document.getElementById('respuestasDelTicket').innerHTML = valores
                       
@@ -623,7 +662,11 @@
         
         document.getElementById('tituloTicketVer').innerHTML = titulo;
         document.getElementById('autorTicketVer').innerHTML = nombre;
-        document.getElementById('descripcionTicketVer').value = descripcion;
+        
+        var ex = /                  /g;
+        var contenidoTicket = descripcion.replace(ex, "\n");
+        
+        document.getElementById('descripcionTicketVer').value = contenidoTicket;
         
      
     }

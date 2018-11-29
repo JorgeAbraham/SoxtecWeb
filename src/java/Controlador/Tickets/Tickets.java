@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
+
 package Controlador.Tickets;
 
 import Controlador.Controlador;
@@ -51,6 +54,12 @@ public class Tickets extends Controlador {
         
     }
     
+    
+    public void supervisionTicket(){
+        
+        utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/tickets/listaSupervision.jsp");
+        
+    }
     
     
     public void cambiarPropietarioTicket(){
@@ -126,14 +135,46 @@ public class Tickets extends Controlador {
         }
         
         
-        String idTicket = T.insertaRespuestaTicket(
+        String ticket[][]=T.getTicket(numeroTicket);
+        
+        String idRespuestaTicket = T.insertaRespuestaTicket(
                               numeroTicket, 
                               idPersonaRespuesta, 
                               textoRespuesta,
                               ordenInt+""
                           );
         
+          
+        String Base=Servlet.getServletContext().getInitParameter("host");
+        String MailAuth=Servlet.getServletContext().getInitParameter("MailAuth");
+        String MailStartTLS=Servlet.getServletContext().getInitParameter("MailStartTLS");
+        String MailHost=Servlet.getServletContext().getInitParameter("MailHost");
+        String MailPort=Servlet.getServletContext().getInitParameter("MailPort");
+        String MailSoxtec=Servlet.getServletContext().getInitParameter("MailSoxtec");
+        String MailPassword=Servlet.getServletContext().getInitParameter("MailPassword");
         
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", MailAuth);
+        props.put("mail.smtp.starttls.enable", MailStartTLS);
+        props.put("mail.smtp.host", MailHost);
+        props.put("mail.smtp.port", MailPort);
+        utilidadEmail.CorreoElectronico CE=new CorreoElectronico( props,
+                                                        MailSoxtec, 
+                                                        MailPassword
+                                                    );
+        
+        usuario_servicio asignado=new usuario_servicio();
+        String asignados[][] = asignado.usuarioPorID(ticket[0][8]);
+        
+        for (int i=0;i<asignados.length;i++){
+            
+            CE.enviaStartTLS(
+                                asignados[i][4],
+                                "Se ha respondido un ticket que creaste SOX-TIC-"+ticket[0][5]+" "+ticket[0][1], 
+                                "Se ha respondido un ticket que creaste: Contenido de la Respuesta:\n"+textoRespuesta+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+ticket[0][5]
+                            );
+            
+        }
        
           
         utilidadesWeb.utilidadWeb.htmlAbrirUbicacion(Servlet, request, response, "/vistas/tickets/lista.jsp"); 
@@ -231,7 +272,7 @@ public class Tickets extends Controlador {
             CE.enviaStartTLS(
                                 usuarioTicketCC[i][4],
                                 "Se te ha COPIADO en un ticket SOX-TIC-"+uuid.toString()+" "+ticketTitulo, 
-                                "Se te ha copiao un ticket: Contenido \n"+ticketDescripcion+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+uuid.toString()
+                                "Se te ha COPIADO un ticket: Contenido \n"+ticketDescripcion+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+uuid.toString()
                             );
             
         }
@@ -239,7 +280,7 @@ public class Tickets extends Controlador {
         
         
         usuario_servicio usuarioTicket=new usuario_servicio();
-        String usuariosTicket[][] = usuarioTicket.usuarioPorID(ticketConCopia);
+        String usuariosTicket[][] = usuarioTicket.usuarioPorIdUsuario(idUsuario);
         
         for (int i=0;i<usuarioTicketCC.length;i++){
             CE.enviaStartTLS(
@@ -290,12 +331,16 @@ public class Tickets extends Controlador {
         usuario_servicio asignado=new usuario_servicio();
         String asignados[][] = asignado.usuarioPorID(ticket[0][8]);
         
+        
+        String estado[][]=T.getEstadoById(idEstadoTicket);
+        
+        
         for (int i=0;i<asignados.length;i++){
             
             CE.enviaStartTLS(
                                 asignados[i][4],
-                                "Se te ha ASIGNADO SOX-TIC-"+ticket[0][5]+" "+ticket[0][1], 
-                                "Se te ha asignado un ticket: Contenido \n"+ticket[0][1]+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+ticket[0][5]
+                                "Se te ha CAMBIADO EL ESTADO DEL TICKET SOX-TIC-"+ticket[0][5]+" "+ticket[0][1]+" ["+estado[0][0]+"]", 
+                                "Contenido \n"+ticket[0][1]+" \n\n"+Base+"Servlet?controlador=ticketToken&ticketID="+ticket[0][5]
                             );
             
         }

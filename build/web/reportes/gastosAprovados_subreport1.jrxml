@@ -65,11 +65,67 @@
 	<field name="Usuario" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="a4e0f122-51c6-4c31-946a-e600791994d9" x="243" y="0" width="159" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Catalogo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="667718a3-bea0-4a89-ae67-dcd1b89e3e0b" x="402" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement uuid="bd0ffaa5-93e4-469c-8ff6-0ba247d70204" x="243" y="0" width="159" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9942c4e-a5b8-42ec-9204-dcc716b746c1" x="402" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
 	<summary>
-		<band height="50">
+		<band height="217">
 			<barChart>
 				<chart>
-					<reportElement uuid="6e5a8537-63f9-4683-9ee5-dcdc4f364726" x="125" y="15" width="534" height="185"/>
+					<reportElement uuid="6e5a8537-63f9-4683-9ee5-dcdc4f364726" x="0" y="0" width="752" height="217"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>

@@ -48,7 +48,7 @@
             <hr>
             
             <ul class="nav nav-tabs ">
-                <li class="active"><a class="btn btn-md bla blb" data-toggle="tab" href="#menu6" >Ordenes de Pago <i class="fa fa-handshake-o" style="font-size:20px"></i></a></li>&nbsp;
+                <li class="active"><a class="btn btn-md bla blb" data-toggle="tab" href="#menu6" >Devolución de Pago <i class="fa fa-handshake-o" style="font-size:20px"></i></a></li>&nbsp;
                 <li><a class="btn btn-md bla blb" data-toggle="tab" href="#menu7" >Revisados <i class="fa fa-thumbs-up" style="font-size:20px"></i></a></li>&nbsp;
                 <li><a class="btn btn-md bla blb btn-danger" data-toggle="tab" href="#menu8" >Rechazados <i class="fa fa-money" style="font-size:20px"></i></a></li>&nbsp;
                 <li><a class="btn btn-md bla blb btn-success" data-toggle="tab" href="#menu9" >Aplicados Aprobada <i class="fa fa-money" style="font-size:20px"></i></a></li>&nbsp;

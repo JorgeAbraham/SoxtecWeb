@@ -73,9 +73,20 @@
                                 }
                                 if (requisicionesForm[i][8].equals(operaciones_servicio.tipoNumero)){
 
-                                    plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][7]+"</span>";
-                                    plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][10]+"</span>";
+                                    
+                                    
+                                    
+                                    
+                                    if ((Integer.parseInt(requisicionesForm[i][13])==10)){
+                                           
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\" >"+requisicionesForm[i][7]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\"  style=\"background-color:#0000FF;\"  >"+requisicionesForm[i][10]+"</span>";
+                                    }
+                                    else{
 
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][7]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][10]+"</span>";
+                                    }
                                 }
                                 if (requisicionesForm[i][8].equals(operaciones_servicio.tipoFecha)){
 
@@ -94,9 +105,9 @@
                                     plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][7]+ "</span>";
                                     if (requisicionesForm[i][14].equals("UsuarioP")){
                                         if( requisicionesForm[i][9]!=null &&  !requisicionesForm[i][9].equals("")){ 
-                                            persona_servicio empleados = new persona_servicio();
-                                            empleados.setIdPersona(Integer.parseInt(requisicionesForm[i][9]));
-                                            empleados.get();
+                                            persona_servicio empleados = new persona_servicio(Integer.parseInt(requisicionesForm[i][9]));
+                                          //  empleados.setIdPersona(Integer.parseInt(requisicionesForm[i][9]));
+                                          //  empleados.get();
                                             plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+empleados.getApellidoPaterno()+" "+empleados.getApellidoMaterno()+" "+empleados.getNombre()+"</span>";
                                         }
                                         

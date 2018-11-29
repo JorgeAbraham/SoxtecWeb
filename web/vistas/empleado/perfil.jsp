@@ -1,6 +1,12 @@
 
 
 
+<%@page import="serviciosBD.operaciones_servicio"%>
+<%@page import="serviciosBD.catalogo_servicio"%>
+<%@page import="java.text.ParseException"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="serviciosBD.lugar_servicio"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="utilidadesbasicas.archivoSerializableParaBD"%>
@@ -42,60 +48,165 @@
             
             <div class="row">
                 
-                <div class="col-md-4 text-left">
+                <div class="col-md-3 text-left">
                     
                     
                     
                     <% 
                         documento = new documentos_servicio();
                         documentos=documento.getDocumentosPorTipoEIdDeEmpleado("4", id);
+                        String valorEstado=""; 
                         for (int i=0;i<documentos.length;i++){  %>
                             <tr>
 
-                                <%  String valor=""; 
+                                <%  
                                     if (documentos[i][6].equals("1")){   //Texto 
-                                        valor=documentos[i][2];
+                                        valorEstado=documentos[i][2];
                                     } else { 
                                         if (documentos[i][6].equals("3")){   //Numero 
-                                            valor=documentos[i][3];
+                                            valorEstado=documentos[i][3];
                                         } else { 
                                             if (documentos[i][6].equals("4")){   //fecha 
-                                                valor=documentos[i][4];
+                                                valorEstado=documentos[i][4];
                                             } else { 
 
                                             } 
                                         } 
                                     } 
 
-                                    if (   valor==null ||  valor.equals("") || valor.equals("sinDefinir")   ){ %>
-                                        <a href="#editEstado"  class="btn btn-warning" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Sin definir <i class="fa fa-question" ></i></a>
+                                    if (   valorEstado==null ||  valorEstado.equals("") || valorEstado.equals("sinDefinir") || valorEstado.equals("ingresado")   ){ %>
+                                        <a href="#editEstado"  class="btn btn-info" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Sin definir <i class="fa fa-question" ></i></a>
                                     <% }else{ %>
                                     
-                                        <% if (valor.equals("alta")){ %>
+                                        <% if (valorEstado.equals("alta")){ %>
                                             <a href="#editEstado"  class="btn btn-success" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Activo <i class="fa fa-arrow-circle-o-up" ></i></a>
                                         <% } %>
                                         
-                                        <% if (valor.equals("baja")){ %>
+                                        <% if (valorEstado.equals("baja")){ %>
                                             <a href="#editEstado"  class="btn btn-danger" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Baja <i class="fa fa-arrow-circle-down" ></i></a>
                                         <% } %>
-                                    
+                                            
+                                        <% if (valorEstado.equals("solictudBaja")){ %>
+                                            <a href="#editEstado"  class="btn btn-warning" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Solicitud de Baja <i class="fa fa-arrow-circle-o-up" ></i></a>
+                                        <% } %>
                                    
+                                        <% if (valorEstado.equals("paroTecnico")){ %>
+                                            <a class="btn btn-md bla blb"  data-toggle="modal">En paro técnico <i class="fa fa-pause-circle" ></i></a>
+                                        <% } %>    
+                                            
                                     <% } %>
                                 
                            </tr>
                         <%}%>
+                        
                     
-                    
+                       
                   
                     
                     
                     
                 </div> 
                 <hr>
-                <div class="col-md-8 text-right">
+                <div class="col-md-9 text-right">
                     
                     <h3><i class="fa fa-user-circle" style="font-size:36px"></i><%   out.println(usuario.getApellidoPaterno()+" "+usuario.getApellidoMaterno()+" "+usuario.getNombre());    %> </h3>
-                </div> 
+                    <% 
+                        
+                        documento = new documentos_servicio();
+                        documentos=documento.getDocumentosPorTipoEIdDeEmpleado("1", id);
+            
+                        for (int i=0;i<documentos.length;i++){  
+                            if (documentos[i][1].equals("Fecha de Ingreso")){
+                                
+                                if (documentos[i][4]!=null){  
+                                        try {
+                                            Calendar inicio = new GregorianCalendar();
+                                            Calendar fin = new GregorianCalendar();
+                                            inicio.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(documentos[i][4]));
+                                            fin.setTime(new Date());
+                                            int difA = fin.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+                                            int difM = difA * 12 + fin.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);  
+                                            if(difA>0){  %>
+                                                <h5>Antigüedad  <% out.print(difA);  %> AÑOS</h5>
+                                <%          }
+                                            else{  %>
+                                                <h5>Antigüedad  <% out.print(difM);  %> MESES</h5>
+                                <%          }   
+                                        } catch(ParseException ex) {
+
+                                        }
+                                %>
+                                        
+                                <%  } 
+                                
+                                
+                                
+                            }
+                        }
+                        %>
+                        
+                        
+                        
+                        <% if (valorEstado.equals("alta")){  %>
+                            <a href="#peticionParoTecnico"  class="btn btn-md bla blb" onclick="peticionParoTecnico( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Paro Técnico <i class="fa fa-pause-circle" ></i></a>
+                        <%}%>
+                        <% if (valorEstado.equals("paroTecnico")){  %>
+                            <a href="#peticionActivo"  class="btn btn-success" onclick="peticionActivo( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Restituir como Activo <i class="fa fa-arrow-circle-o-up" ></i></a>
+                        <%}%>
+                        <a href="#peticionBaja"  class="btn btn-warning" onclick="peticionDeBaja( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Solicitud de Baja <i class="fa fa-arrow-circle-down" ></i></a>
+                        
+                </div>  
+                
+            <hr style="width:100%;">
+                <div class="container">
+                    <div class="row justify-content-around">
+                           
+
+                            <div class="col-6 ">
+
+                                <%
+                                    lugar_servicio L=new lugar_servicio();
+
+                                    String lugar[][]=L.listaLugaresPorIDPersona(id);
+                                %>
+
+                                <a href="#editLugar"  class="btn btn-info" onclick="seleccionaLugar( <%   out.print(id);  %>  )"   data-toggle="modal">Lugar <% out.print(lugar[0][1]);  %><i class="fa fa-industry" ></i></a>
+
+                            </div>
+                            <div class="col-6 ">
+
+                                <%
+                                    
+                                    documento = new documentos_servicio();
+                                    documentos=documento.getDocumentosPorTipoEIdDeEmpleado("12", id);
+                                    
+                                    
+                                    
+                                    String catalogo[][]=null;
+                                    if(documentos[0][2]!=null){
+
+                                        catalogo_servicio C =new catalogo_servicio();
+                                        catalogo=C.catalogoPorId(documentos[0][2]);
+                                %>
+                                        <a href="#editLugar"  class="btn btn-info" onclick="seleccionaArea( <%   out.print(documentos[0][0]);  %>  )"   data-toggle="modal">Area <% out.print(catalogo[0][0]);  %><i class="fa fa-building" ></i></a>
+                                <%  }else{%>
+                                        <a href="#editLugar"  class="btn btn-danger" onclick="seleccionaArea( <%   out.print(documentos[0][0]);  %>  )"   data-toggle="modal">Area No Asigada<i class="fa fa-building" ></i></a>
+                                <%  }%>
+                                        
+                            </div>
+
+                        </div>
+                    </div>
+                            
+                    
+                            
+                            
+                    
+                    
+                
+                
+                <hr>
+                                
                 <div class="col-md-12 text-right">
                     
                     
@@ -227,7 +338,7 @@
                                                             <td class="bv aaj"><%  out.println(valor); %></td>
                                                         <% } %>
                                                     <td class="bv aaj">
-                                                        <a  href="#editModal" class="btn btn-md bla blb" data-toggle="modal" id="<%  out.print(documentos[i][1]);  %>" onclick="editaArchivo(event, <%  out.print(id);  %> , <%  out.print(documentos[i][0]);  %> , <%  out.print(documentos[i][6]);  %>,   '<%  out.print(documentos[i][2]);  %>'   ,   '<%  out.print(documentos[i][3]);  %>'  ,  '<%  out.print(documentos[i][4]);  %>'  )"  >Editar <i class="fa fa-edit" ></i></a>
+                                                        <a  href="#editModal" class="btn btn-md bla blb" data-toggle="modal" id="<%  out.print(documentos[i][1]);  %>" onclick="editaArchivo(event, <%  out.print(id);  %> , <%  out.print(documentos[i][0]);  %> , <%  out.print(documentos[i][6]);  %>,   '<%  out.print(documentos[i][2]);  %>'   ,   '<%  out.print(documentos[i][3]);  %>'  ,  '<%  out.print(documentos[i][4]);  %>'  )"  >Guardar <i class="fa fa-edit" ></i></a>
                                                     </td>
                                                </tr>
                                             <%}%>
@@ -285,7 +396,7 @@
 
                                                     <% } %>
 
-                                                    <a  href="#fileModal" class="btn btn-md bla blb" data-toggle="modal" id="<%  out.print(documentos[i][1]);  %>" onclick="seleccionaArchivo(event, <%  out.print(id);  %> , <%  out.print(documentos[i][0]);  %>,<%  out.print(documentos[i][8]);  %> )"  >Subir <i class=" fa fa-cloud-upload" ></i></a>
+                                                    <a  href="#fileModal" class="btn btn-md bla" data-toggle="modal" id="<%  out.print(documentos[i][1]);  %>" onclick="seleccionaArchivo(event, <%  out.print(id);  %> , <%  out.print(documentos[i][0]);  %>,<%  out.print(documentos[i][8]);  %> )"  >Subir <i class=" fa fa-cloud-upload" ></i></a>
                                                 </div>
 
                                             <% } %>
@@ -802,6 +913,9 @@
             </div>
         </div>
 
+             
+                                            
+                                            
                                             
                                             
 
@@ -1069,7 +1183,7 @@
                 </div>
                 <div class="om">
                     <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
-                    <input type = "submit" class="ce kh" value = "Editar" />
+                    <input type = "submit" class="ce kh" value = "Guardar" />
                 </div>
             </form>
         </div>
@@ -1088,7 +1202,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             
-            <form id="" action = "Servlet?controlador=editaEstadoEmpleado" method = "post" >
+            <form id="" action = "Servlet?controlador=editaEstadoEmpleado" method = "post"  onsubmit="return checkSubmit();" >
                 <div class="modal-body">
                     
                     <div class="form-group col-md-12">
@@ -1108,13 +1222,248 @@
                 </div>
                 <div class="om">
                     <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
-                    <input type = "submit" class="ce kh" value = "Cambiar" />
+                    <input type = "submit" id="btsubmit" class="ce kh" value = "Cambiar" />
                 </div>
             </form>
         </div>
     </div>
 </div>
+       
+                        
+                        
+                     
                             
+<div id="editLugar" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span>Modifica Lugar</span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            
+            <form id="editaLugarEmpleado" action = "Servlet?controlador=editaLugarEmpleado" method = "post"  onsubmit="return checkSubmit();" >
+                <div class="modal-body">
+                    
+                    <div class="form-group col-md-12">
+                        
+                        <span class="col-md-12">Lugar</span>
+                        <select id="Lugar"  name="Lugar" class="form-control" onchange="modificarPropietario()">
+
+                            <%
+                                L = new lugar_servicio();
+                                String lugares[][]=L.listaLugares();
+
+
+                                %>
+                                   
+                                <%
+                                for (int i=0;i<lugares.length;i++){  
+                                    if (lugar[0][0].equals(lugares[i][0])){  %>
+                                        <option value="<% out.print(lugares[i][0]); %>" selected> <% out.print(lugares[i][1]); %> </option>
+                                <%  } else{  %>
+                                        <option value="<% out.print(lugares[i][0]); %>"> <% out.print(lugares[i][1] ); %> </option>
+                                <%  }  %>
+                                
+                            <%  } %>
+
+
+                        </select>
+                        
+                    </div>
+
+                    <input type="hidden" id="idPersonaEditarLugar" name="idPersonaEditarLugar" value="" />
+                   
+
+                    <br />
+
+                </div>
+                <div class="om">
+                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
+                    <input type = "submit" id="btsubmitLugar" class="ce kh" value = "Cambiar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+               
+                            
+                 
+                            
+<div id="editArea" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span>Modifica Area</span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            
+            <form id="editaLugarEmpleado" action = "Servlet?controlador=editaLugarEmpleado" method = "post"  onsubmit="return checkSubmit();" >
+                <div class="modal-body">
+                    
+                    <div class="form-group col-md-12">
+                        
+                        <span class="col-md-12">Lugar</span>
+                        <select id="Lugar"  name="Lugar" class="form-control" onchange="modificarPropietario()">
+
+                            <%
+
+                                catalogo_servicio C = new catalogo_servicio();
+                                String areas[][]=C.listaPorTipoCatalogo(15);
+
+                                %>
+                                   
+                                <%
+                                for (int i=0;i<areas.length;i++){  
+                                    if (lugar[0][0].equals(areas[i][0])){  %>
+                                        <option value="<% out.print(areas[i][0]); %>" selected> <% out.print(areas[i][1]); %> </option>
+                                <%  } else{  %>
+                                        <option value="<% out.print(areas[i][0]); %>"> <% out.print(areas[i][1] ); %> </option>
+                                <%  }  %>
+                                
+                            <%  } %>
+
+
+                        </select>
+                        
+                    </div>
+
+                    <input type="hidden" id="idPersonaEditarLugar" name="idPersonaEditarLugar" value="" />
+                   
+
+                    <br />
+
+                </div>
+                <div class="om">
+                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
+                    <input type = "submit" id="btsubmitLugar" class="ce kh" value = "Cambiar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+               
+                            
+
+                                 
+<div id="peticionBaja" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            
+            <form id="empleadoSolicitudBaja" action = "Servlet?controlador=empleadoSolicitudBaja" method = "post"  onsubmit="return checkSubmit();" >
+                <div class="modal-body">
+                    
+                    <div class="form-group col-md-12">
+                        
+                        <span class="col-md-12">Solicitar la Baja</span>
+                        <hr>
+                        <h3> <%   out.println(usuario.getApellidoPaterno()+" "+usuario.getApellidoMaterno()+" "+usuario.getNombre());    %> </h3>
+                        
+                    </div>
+
+                    <input type="hidden" id="idPersonaPeticionBaja" name="idPersonaPeticionBaja" value="" />
+                    <input type="hidden" id="idVariablePeticionBaja" name="idVariablePeticionBaja" value="" />
+                    <input type="hidden" id="valorEditarBaja" name="valorEditarBaja" value="solictudBaja" />
+                   
+                 
+
+                    <br />
+
+                </div>
+                <div class="om">
+                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
+                    <input type = "submit" id="btsubmitSolicitudBaja" class="ce kh btn-warning" value = "Solicitar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>          
+                        
+                        
+                        
+                                
+<div id="peticionParoTecnico" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            
+            <form id="empleadoParoTecnico" action = "Servlet?controlador=empleadoParoTecnico" method = "post"  onsubmit="return checkSubmit();" >
+                <div class="modal-body">
+                    
+                    <div class="form-group col-md-12">
+                        
+                        <span class="col-md-12">Personal en paro técnico</span>
+                        <hr>
+                        <h3> <%   out.println(usuario.getApellidoPaterno()+" "+usuario.getApellidoMaterno()+" "+usuario.getNombre());    %> </h3>
+                        
+                    </div>
+
+                    <input type="hidden" id="idPersonaParoTecnico" name="idPersonaParoTecnico" value="" />
+                    <input type="hidden" id="idVariableParoTecnico" name="idVariableParoTecnico" value="" />
+                    <input type="hidden" id="valorEditarParoTecnico" name="valorEditarParoTecnico" value="paroTecnico" />
+                   
+                 
+
+                    <br />
+
+                </div>
+                <div class="om">
+                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
+                    <input type = "submit" id="btsubmitSolicitudParoTecnico" class="ce kh btn btn-md bla blb" value = "Pasar a paro Técnico" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>       
+ 
+                        
+<div id="peticionActivo" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            
+            <form id="empleadoParoTecnico" action = "Servlet?controlador=empleadoParoTecnico" method = "post"  onsubmit="return checkSubmit();" >
+                <div class="modal-body">
+                    
+                    <div class="form-group col-md-12">
+                        
+                        <span class="col-md-12">Personal restituido como activo</span>
+                        <hr>
+                        <h3> <%   out.println(usuario.getApellidoPaterno()+" "+usuario.getApellidoMaterno()+" "+usuario.getNombre());    %> </h3>
+                        
+                    </div>
+
+                    <input type="hidden" id="idPersonaActivo" name="idPersonaActivo" value="" />
+                    <input type="hidden" id="idVariableActivo" name="idVariableActivo" value="" />
+                    <input type="hidden" id="valorEditarActivo" name="valorEditarActivo" value="alta" />
+                   
+                 
+
+                    <br />
+
+                </div>
+                <div class="om">
+                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
+                    <input type = "submit" id="btsubmitSolicitudParoTecnico" class="ce kh btn-success" value = "Pasar a Activo" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>       
                             
                             
 <script>
@@ -1123,6 +1472,23 @@
         window.location='Servlet?controlador=empleadosPerfil&empleadoId=<%out.print(id);%>';  
     }
 
+
+    function checkSubmit() {
+        
+        
+        document.getElementById("btsubmit").value = "Enviando...";
+        document.getElementById("btsubmit").disabled = true;
+        
+        document.getElementById("btsubmitLugar").value = "Enviando...";
+        document.getElementById("btsubmitLugar").disabled = true;
+        
+        document.getElementById("btsubmitSolicitudBaja").value = "Enviando...";
+        document.getElementById("btsubmitSolicitudBaja").disabled = true;
+        
+        
+        
+        return true;
+    }
 
     $(document).ready(function(){
     
@@ -1167,6 +1533,37 @@
         $('#idPersonaEditarEstado').val(  idPersona  );
         $('#idVariableAlmacenamientoEstado').val(  idVariableAlmacenamiento  ); 
         
+    }
+    
+    function peticionDeBaja(idPersona,idVariableAlmacenamiento){
+        
+        $('#idPersonaPeticionBaja').val(  idPersona  );
+        $('#idVariablePeticionBaja').val(  idVariableAlmacenamiento  ); 
+        
+    }
+    
+    function peticionParoTecnico(idPersona,idVariableAlmacenamiento){
+              
+        $('#idPersonaParoTecnico').val(  idPersona  );
+        $('#idVariableParoTecnico').val(  idVariableAlmacenamiento  ); 
+        
+    }
+
+
+    function peticionActivo(idPersona,idVariableAlmacenamiento){
+              
+        $('#idPersonaActivo').val(  idPersona  );
+        $('#idVariableActivo').val(  idVariableAlmacenamiento  ); 
+        
+    }
+
+    function seleccionaLugar(idPersona){
+        $('#idPersonaEditarLugar').val(  idPersona  );
+    }
+
+
+    function seleccionaArea(idPersona){
+        $('#idPersonaEditarArea').val(  idPersona  );
     }
 
 

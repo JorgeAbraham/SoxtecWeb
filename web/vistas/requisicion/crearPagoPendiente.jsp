@@ -18,7 +18,7 @@
             <jsp:include page="../menuSuperior.jsp" flush="true"/>
 
                     <div class="bkz aav aaj">
-                        <h3 class="bla blb">ORDEN DE PAGO</h3>
+                        <h3 class="bla blb">Devolución de Pago</h3>
                     </div>
 
           

@@ -40,7 +40,7 @@
                     <div  class="col-md-12" style="background-color: #434857">
                         <span style="color: #FFFFFF">Propietario</span>
                         <div  class="form-group col-md-12" style="background-color: #434857"  >
-                            <select id="propietarioTicketCombo"  name="propietarioTicketCombo" class="form-control" onchange="modificarPropietario()">
+                            <select id="propietarioTicketCombo"  name="propietarioTicketCombo" class="form-control" onchange="modificarPropietario()" disabled>
 
                                  <%
                                     persona_servicio empleados = new persona_servicio();
@@ -71,7 +71,7 @@
                         <span id="estadoColor1" style="color: #FFFFFF" >Estado</span>
                     </div>
                     <div id="estadoColor2" class="form-group col-md-12" style="background-color: #5cb85c"  onchange="modificarEstado()" >
-                        <select id="estadoTicketCombo" class="form-control">
+                        <select id="estadoTicketCombo" class="form-control" disabled>
                             <%
                                 ticket_servicio ticket = new ticket_servicio();
                                 String tickets[][]=ticket.getEstadoTicket();
@@ -95,7 +95,8 @@
                     
                    
                     <% 
-                        persona_servicio empl = new persona_servicio(Integer.parseInt(respuestas[i][8]));
+                        persona_servicio empl = new persona_servicio();
+                        empl.setIdPersona(Integer.parseInt(respuestas[i][8]));
                         empl.get();
                         
                     %>
@@ -108,7 +109,10 @@
                 </div>
                 <div class="col-md-12">
 
-                    <textarea id="descripcionTicketVer" rows="4" cols="50"  class="col-md-12" disabled ><% out.print(respuestas[i][2]);  %></textarea>
+                    <textarea id="descripcionTicketVer" rows="4" cols="50"  class="col-md-12" disabled ><% 
+                            String text = respuestas[i][2];
+                            out.print(     text    ); %>
+                    </textarea>
                 </div>
                 
                 <hr width="100%" />
@@ -123,7 +127,10 @@
                                 
                                 for (int j=0;j<respuestasTicket.length;j++){ %>
                                     <div class="text-right"><i><% out.print(respuestasTicket[j][5]+" "+respuestasTicket[j][6]+" "+respuestasTicket[j][7]);  %></i></div>
-                                    <% out.print(respuestasTicket[j][1]); %>
+                                    <% 
+                                        text = respuestasTicket[j][1];
+                                        text = text.replace("\n", "<br>").replace("\r", "<br>");
+                                        out.print(     text    ); %>
                                 
                                 
                                 <% } %>
@@ -156,9 +163,31 @@
 
 <script>
     
+    
+    
+    
     function actualizarBotonCabecera(){
          window.location='Servlet?controlador=tickets';  
     }
+    
+    
+    $(document).ready(function(){
+        if (1== <%  out.println (respuestas[0][6]); %> ){
+            document.getElementById('estadoColor0').style = "background-color: #5cb85c";
+            document.getElementById('estadoColor1').style = "background-color: #5cb85c";
+            document.getElementById('estadoColor2').style = "background-color: #5cb85c";
+        }
+        if (2== <%  out.println (respuestas[0][6]); %> ){
+            document.getElementById('estadoColor0').style = "background-color: #ffff00";
+            document.getElementById('estadoColor1').style = "background-color: #ffff00";
+            document.getElementById('estadoColor2').style = "background-color: #ffff00";
+        }
+        if (3== <%  out.println (respuestas[0][6]); %> ){
+            document.getElementById('estadoColor0').style = "background-color: #F80000";
+            document.getElementById('estadoColor1').style = "background-color: #F80000";
+            document.getElementById('estadoColor2').style = "background-color: #F80000";
+        }
+    });
     
     function modificarPropietario(){
         

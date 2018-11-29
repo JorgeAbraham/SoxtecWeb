@@ -94,9 +94,12 @@
                                     plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][7]+ "</span>";
                                     if (requisicionesForm[i][14].equals("UsuarioP")){
                                         if( requisicionesForm[i][9]!=null &&  !requisicionesForm[i][9].equals("")){ 
-                                            persona_servicio empleados = new persona_servicio();
-                                            empleados.setIdPersona(Integer.parseInt(requisicionesForm[i][9]));
-                                            empleados.get();
+                                            
+                                            persona_servicio empleados = new persona_servicio(Integer.parseInt(idUsuario));
+                                            
+                                            /* persona_servicio empleados = new persona_servicio();
+                                            empleados.setIdPersona(  Integer.parseInt(requisicionesForm[i][9])   );
+                                            empleados.get(); */
                                             plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+empleados.getApellidoPaterno()+" "+empleados.getApellidoMaterno()+" "+empleados.getNombre()+"</span>";
                                         }
                                         

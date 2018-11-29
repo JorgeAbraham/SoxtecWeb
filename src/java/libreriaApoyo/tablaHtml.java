@@ -168,7 +168,7 @@ public class tablaHtml {
     public static void main(String args[]){
         
         
-        
+        /*
         tablaHtml T=new tablaHtml();
         T.agregaRegistro("6","A","1","3",null,"1",null,null);
         T.agregaRegistro("6","A","2","3",null,"3",null,null);
@@ -182,8 +182,15 @@ public class tablaHtml {
                     
         
         System.out.print(T.printHTMLtabla());
+        */
         
         
+        String a[]=new String[0];
+        System.out.print("Flush");
+        
+        for (int i=0;i<a.length;i++){
+            System.out.print("Putamadre");
+        }
         
        
     }

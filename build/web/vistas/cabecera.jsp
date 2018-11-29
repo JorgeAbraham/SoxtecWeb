@@ -31,10 +31,12 @@
                 width: 1px;
                 min-width: 100%;
                 *width: 100%;
-                 background-color: #96989A;
-                 color: #FFFFFF;
+                 background-color: #F0F0F0;
+                 color: #000000;
             }
         </style>
+        
+        
         
         <script src="<% out.println(host); %>assets/js/jquery.min.js"></script>
         

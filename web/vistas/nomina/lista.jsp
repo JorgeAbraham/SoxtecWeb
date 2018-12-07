@@ -71,9 +71,12 @@
                                     
                     ArrayList<String> tipoOperacionNomina=new ArrayList();
                     tipoOperacionNomina.add("22");
+                    
 
                     ArrayList<String> estadosOperacionNomina=new ArrayList();
                     estadosOperacionNomina.add("19");
+                    estadosOperacionNomina.add("24");
+                    
 
                     ArrayList<String> idConceptoNomina=new ArrayList();
                     idConceptoNomina.add("124");
@@ -106,7 +109,7 @@
                     
                 %>
                 
-                
+
                 
                 <%
                 
@@ -119,7 +122,8 @@
 
                     ArrayList<String> estadosOperacionNominaConceptos=new ArrayList();
                     estadosOperacionNominaConceptos.add("19");
-
+                    estadosOperacionNominaConceptos.add("24");
+                    
                     ArrayList<String> idConceptoNominaConceptos=new ArrayList();
                     ArrayList<Boolean> idConceptoNominaConceptosLista=new ArrayList();
                     idConceptoNominaConceptos.add("124"); idConceptoNominaConceptosLista.add(false);
@@ -137,6 +141,58 @@
                     
                 %>
                 
+                
+                
+                <%
+                
+                persona_servicio empleados = new persona_servicio();
+                    
+                String opciones="";  //List Completa
+                String opcionesFaltantes="";  //Lista de Faltantessin la nomina
+                String opcionesYaSeleccionadas="";  //Lista de Faltantessin la nomina
+                
+                
+                
+                String empleado[][]=empleados.LISTAempleadosEstadoActivoString(empleados.ALTA);
+               
+                empleado=empleados.LISTAEmpleadosPorStringYSinAsignar(" v.valorTexto='ingresado'  OR  v.valorTexto='alta'     OR   v.valorTexto='sinDefinir'   OR   v.valorTexto='paroTecnico'   ");
+                boolean encontrado;
+                
+                
+                for (int j=0;j<empleado.length;j++){
+                    
+                    opciones = opciones + "<option value=\"" + empleado[j][1] + "\">" + empleado[j][0] + "</option>";
+                
+                    
+                    encontrado=false;
+                    for (int k=0;k<req.length;k++){
+                        
+                        
+               
+                        if(req[k][8].equals(empleado[j][1])){
+                          
+                            encontrado=true;
+                            break;
+                        }
+                    }
+
+                        
+                    if (encontrado==false){
+                        opcionesFaltantes = opcionesFaltantes  + "<option value=\"" + empleado[j][1] + "\">" + empleado[j][0] + "</option>";
+                        
+                    }else{
+                        opcionesYaSeleccionadas = opcionesYaSeleccionadas  + "<option value=\"" + empleado[j][1] + "\"  disable >" + empleado[j][0] + "</option>";
+                    }
+                    
+                    
+                
+                }
+   
+
+
+
+
+                %>
                 
             </div>    
             
@@ -182,6 +238,7 @@
 
                                 ArrayList<String> estadosOperacion=new ArrayList();
                                 estadosOperacion.add("19");
+                                estadosOperacion.add("24");
 
 
                                 ArrayList<String> idConcepto=new ArrayList();
@@ -229,242 +286,234 @@
                     
                 </div>
             
-          
+            <div class="row">
+                <hr>
+                <a href="Servlet?controlador=imprimeReciboTotal&sem=<%out.print(numberWeekOfYear);%>&anio=<%out.print(numberYear);%>"  class="btn btn-primary"  target="_blank" >Formato de pago bancario<i class="fa fa-print" ></i></a>
+            </div>
             
             
             <hr class="aav">
-            
-            
-            <h3>Agrega Pago Manualmente</h3>
-            
-            <br>
-            
-            <form id="crearRegistroNomina" action="Servlet?controlador=registroNomina" method = "post"  enctype = "multipart/form-data">
-            
                 
-                 <input type="hidden" name="idUsuario" class="col-md-6"  value="<% out.print(idUsuario); %>" >
-                
-                <%
+            <div class="card-body text-primary">
 
-                    persona_servicio empleados = new persona_servicio();
-                    String empleado1[][]=empleados.LISTAempleadosString(true);
+                    
 
-                    String empleadosCatalogo="";
-                    for (int j=0;j<empleado1.length;j++){
-                        empleadosCatalogo = empleadosCatalogo + "<option value=\'" + empleado1[j][1] + "\'>" + empleado1[j][0] + "</option>";
-                    }
-
-
-
-                    catalogo_servicio C = new catalogo_servicio();
-                    String conceptos[][]=C.listaPorTipoCatalogo(16); 
-                    String conceptosLista="";
-                    for (int i=0;i<conceptos.length;i++){  
-                        conceptosLista=conceptosLista+"<option value=\'"+conceptos[i][0]+"\'>"+conceptos[i][1]+"</option>";
-                    }  
-
-
-                    operaciones_servicio operacion = new operaciones_servicio();
-                    String requisicionesForm[][]=operacion.listaOperacionesBasePorTipo("22");
-
-                    String plantillaDeTexto="";
-                    String idLista="";
-
-
-                    String fragmentoTabla0="<table  id=\"tabla";
-                    String fragmentoTabla1="\"  class=\"table table-responsive table-striped\"      class=\"col-md-12\" >"+
-                                                "<thead>"+
-                                            "<tr>";
-                    String cabeceras=""; 
-
-                    String fragmentoTabla2="</tr>"+
-                                                "</thead>"+
-                                                    "<tbody>";
-
-                    String valores=""; 
-                    String fragmentoTabla3=
-                                                    "</tbody>"+
-                                                "</table>";
-
-                    out.println("<div class=\"row\">");
-
-
-
-
-
-                    for (int i=0;i<requisicionesForm.length;i++){
-
-
-                        idLista=requisicionesForm[i][2];
-
-                        if (  requisicionesForm[i][2]==null  ){  //No es una Lista
-
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.tipoTexto)){
-
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
-                                plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\""+requisicionesForm[i][4]+"\"  id=\""+requisicionesForm[i][4]+"\"  class=\"col-md-6\" >";
-
-                            }
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.tipoArchivo)){
-
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
-                                plantillaDeTexto=plantillaDeTexto+"<input type=\"file\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\" class=\"col-md-6\"  >";
-
-                            }
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.tipoNumero)){
-
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
-                                plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\"   class=\"col-md-6\"  >";
-
-                            }
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.tipoFecha)){
-
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
-                                plantillaDeTexto=plantillaDeTexto+"<input type=\"date\" name=\""+requisicionesForm[i][4]+"\"   id=\""+requisicionesForm[i][4]+"\"        class=\"col-md-6\"    value=\""+ (new SimpleDateFormat("yyyy-MM-dd").format(fechaActual))  +"\"     >";
-
-                            }
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.tipoTextoLargo)){
-
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
-                                plantillaDeTexto=plantillaDeTexto+"<textarea rows=\"4\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\"     cols=\"50\"  class=\"col-md-6\"  ></textarea>";
-
-                            }
-                            if (requisicionesForm[i][3].equals(operaciones_servicio.catalogo)){
-
-                              
-                                plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+ "</span>";
-                                if (requisicionesForm[i][4].equals("personaNomina")){
-                                        
-                                        
-                                    String empleado[][]=empleados.LISTAempleadosEstadoActivoString(empleados.ALTA);
-
-                                    String opciones="";
-
-                                    for (int j=0;j<empleado.length;j++){
-                                        opciones = opciones + "<option value=\"" + empleado[j][1] + "\">" + empleado[j][0] + "</option>";
-                                    }
-                                    
-                                    
-                                    empleado=empleados.LISTAempleadosEstadoSinAsignar();
-                                    for (int j=0;j<empleado.length;j++){
-                                        opciones = opciones + "<option value=\"" + empleado[j][1] + "\">" + empleado[j][0] + "</option>";
-                                    }
-                                    
-                                    plantillaDeTexto=plantillaDeTexto+"<div class=\"form-group col-md-6\"  onchange=\"cambiarComboPersona()\"   >"+
-                                                                            "<select id=\""+requisicionesForm[i][4]+"\" name=\""+requisicionesForm[i][4]+"\" class=\"form-control\">"+
-                                                                                "<option value=\"\"></option>"+
-                                                                                opciones+
-                                                                            "</select>"+
-                                                                        "</div>";
-                                    
-                                    plantillaDeTexto=plantillaDeTexto+"<div id=\"valoresPersona\"></div>";
-                                        
-                                }
-                            }
-
-                        }
-                        else{ //Listas
-
-                            plantillaDeTexto=plantillaDeTexto+fragmentoTabla0+requisicionesForm[i][2];
-                            plantillaDeTexto=plantillaDeTexto+fragmentoTabla1;
-                            for (int j=0;j<requisicionesForm.length;j++){
-                                if (  requisicionesForm[j][2]!=null  &&   requisicionesForm[j][2].equals(idLista)){
-                                    cabeceras=cabeceras+"<th>"+requisicionesForm[j][1]+"</th>";
-                                    i=j;
-                                }
-                            }
-                            plantillaDeTexto=plantillaDeTexto+cabeceras;
-                            cabeceras=cabeceras+"";
-                            plantillaDeTexto=plantillaDeTexto+fragmentoTabla2;
-                            for (int j=0;j<requisicionesForm.length;j++){
-                                if (  requisicionesForm[j][2]!=null  &&   requisicionesForm[j][2].equals(idLista)){
-                                    valores=valores+"<td  >";
-
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.tipoTexto)){
-                                            valores=valores+"<input type=\"text\" name=\""+requisicionesForm[j][4]+"[]\" id=\""+requisicionesForm[j][4]+"_1\" class=\"col-md-12\" onkeyup=\"calcularTotales(event);\"  >";
-                                        }
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.tipoArchivo)){
-                                            valores=valores+"<input type=\"file\" name=\""+requisicionesForm[j][4]+"[]\" id=\""+requisicionesForm[j][4]+"_1\" class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"   >";
-                                        }
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.tipoNumero)){
-                                            valores=valores+"<input type=\"text\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"  >";
-                                        }
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.tipoFecha)){
-                                            valores=valores+"<input type=\"date\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"    >";
-                                        }
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.tipoTextoLargo)){
-                                            valores=valores+"<textarea rows=\"4\" cols=\"50\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"   onkeyup=\"calcularTotales(event);\"    ></textarea>";
-                                        }
-
-                                        if (requisicionesForm[j][3].equals(operaciones_servicio.catalogo)){
-
-
-
-                                            if (requisicionesForm[j][4].equals("conceptoNomina")){
-                                                        valores=valores+"<div class=\"form-group\">"+
-                                                                                        "<select id=\""+requisicionesForm[j][4]+"_1\" name=\""+requisicionesForm[j][4]+"[]\" class=\"\"  onchange=\"cambiarComboConcepto("+j+")\"    >"+
-                                                                                            "<option value=\"\"></option>"+
-                                                                                            conceptosLista+
-                                                                                        "</select>"+
-                                                                                    "</div>";
-                                            }
-
-
-
-
-                                        }
-
-
-
-                                    valores=valores+"</td>";
-                                    i=j;
-                                }
-
-                            }
-
-                            plantillaDeTexto=plantillaDeTexto+valores;
-
-                            valores=valores+"";
-                            plantillaDeTexto=plantillaDeTexto+fragmentoTabla3;
-                            
-                            plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-8\">Horas Totales</span>";
-                            plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\"horasTotal\"  id=\"horasTotal\"   class=\"col-md-4\"   >";
-                            
-                            plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-8\">Total</span>";
-                            plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\"costoTotal\"  id=\"costoTotal\"   class=\"col-md-4\"   >";
-                            
-                            plantillaDeTexto=plantillaDeTexto+"<a href='javascript:;' class=\"col-md-2 btn btn-white btn-md bla blb \" onclick=\"agregaFila("+requisicionesForm[i][2]+");\" >Agregar <i class=\"fa fa-plus-circle\" ></i> </a>";
-                            plantillaDeTexto=plantillaDeTexto+"<div class=\"col-md-8\"></div>";
-                            plantillaDeTexto=plantillaDeTexto+"<a href='javascript:;' class=\"col-md-2  btn btn-white btn-md bla blb \" onclick=\"eliminaFila("+requisicionesForm[i][2]+");\" >Eliminar <i class=\"fa fa-remove\" ></i></a>";
-
-                        }
-
-
-                    }
-
-                    out.print(plantillaDeTexto);
-
-                %>
-                
-                
-                <div class="container">
-                 
-                    <div class="row">
-                        <input type="button" class="btn btn-primary col-12" name="Guardar" id="submit_value" value="Guardar en la lista de Nomina" onclick="validacion()"/>
-                         
-                    </div>  
-                    <hr>
-                   
-                    <div class="row">
                         
-                        <a href="Servlet?controlador=imprimeReciboTotal&sem=<%out.print(numberWeekOfYear);%>&anio=<%out.print(numberYear);%>"  class="btn btn-primary"  target="_blank" >Formato de pago bancario<i class="fa fa-print" ></i></a>
                         
-                    </div>
-                </div>
-                
-            </form>
+                    <h3>Agrega Pago Manualmente</h3>
+
+                    <br>
+
+                    <form id="crearRegistroNomina" action="Servlet?controlador=registroNomina" method = "post"  enctype = "multipart/form-data">
+
+
+                         <input type="hidden" name="idUsuario" class="col-md-6"  value="<% out.print(idUsuario); %>" >
+
+                        <%
+
+                           
+
+                           
+
+
+
+                            catalogo_servicio C = new catalogo_servicio();
+                            String conceptos[][]=C.listaPorTipoCatalogo(16); 
+                            String conceptosLista="";
+                            for (int i=0;i<conceptos.length;i++){  
+                                conceptosLista=conceptosLista+"<option value=\'"+conceptos[i][0]+"\'>"+conceptos[i][1]+"</option>";
+                            }  
+
+
+                            operaciones_servicio operacion = new operaciones_servicio();
+                            String requisicionesForm[][]=operacion.listaOperacionesBasePorTipo("22");
+
+                            String plantillaDeTexto="";
+                            String idLista="";
+
+
+                            String fragmentoTabla0="<table  id=\"tabla";
+                            String fragmentoTabla1="\"  class=\"table table-responsive table-striped\"      class=\"col-md-12\" >"+
+                                                        "<thead>"+
+                                                    "<tr>";
+                            String cabeceras=""; 
+
+                            String fragmentoTabla2="</tr>"+
+                                                        "</thead>"+
+                                                            "<tbody>";
+
+                            String valores=""; 
+                            String fragmentoTabla3=
+                                                            "</tbody>"+
+                                                        "</table>";
+
+                            out.println("<div class=\"row\">");
+
+
+
+
+
+                            for (int i=0;i<requisicionesForm.length;i++){
+
+
+                                idLista=requisicionesForm[i][2];
+
+                                if (  requisicionesForm[i][2]==null  ){  //No es una Lista
+
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.tipoTexto)){
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\""+requisicionesForm[i][4]+"\"  id=\""+requisicionesForm[i][4]+"\"  class=\"col-md-6\" >";
+
+                                    }
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.tipoArchivo)){
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"file\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\" class=\"col-md-6\"  >";
+
+                                    }
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.tipoNumero)){
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\"   class=\"col-md-6\"  >";
+
+                                    }
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.tipoFecha)){
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<input type=\"date\" name=\""+requisicionesForm[i][4]+"\"   id=\""+requisicionesForm[i][4]+"\"        class=\"col-md-6\"    value=\""+ (new SimpleDateFormat("yyyy-MM-dd").format(fechaActual))  +"\"     >";
+
+                                    }
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.tipoTextoLargo)){
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+"</span>";
+                                        plantillaDeTexto=plantillaDeTexto+"<textarea rows=\"4\" name=\""+requisicionesForm[i][4]+"\" id=\""+requisicionesForm[i][4]+"\"     cols=\"50\"  class=\"col-md-6\"  ></textarea>";
+
+                                    }
+                                    if (requisicionesForm[i][3].equals(operaciones_servicio.catalogo)){
+
+
+                                        plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-6\">"+requisicionesForm[i][1]+ "</span>";
+                                        plantillaDeTexto=plantillaDeTexto+("<a href=\"#selecccionaEmpleadoModal\"  class=\"btn btn-info col-md-6\" data-toggle=\"modal\">Seleccionar Persona <i class=\"fa fa-filter\" ></i></a>");
+                                            
+                                        
+                                        if (requisicionesForm[i][4].equals("personaNomina")){
+
+                                            
+                                            plantillaDeTexto=plantillaDeTexto+"<div class=\"form-group col-md-12\"  onchange=\"cambiarComboPersona()\"   >"+
+                                                                                    "<select id=\""+requisicionesForm[i][4]+"\" name=\""+requisicionesForm[i][4]+"\" class=\"form-control\">"+
+                                                                                        "<option value=\"\"></option>"+
+                                                                                        opcionesFaltantes+
+                                                                                    "</select>"+
+                                                                                "</div>";
+                                            
+                                            plantillaDeTexto=plantillaDeTexto+"<div id=\"valoresPersona\"></div>";
+
+                                        }
+                                    }
+
+                                }
+                                else{ //Listas
+
+                                    plantillaDeTexto=plantillaDeTexto+fragmentoTabla0+requisicionesForm[i][2];
+                                    plantillaDeTexto=plantillaDeTexto+fragmentoTabla1;
+                                    for (int j=0;j<requisicionesForm.length;j++){
+                                        if (  requisicionesForm[j][2]!=null  &&   requisicionesForm[j][2].equals(idLista)){
+                                            cabeceras=cabeceras+"<th>"+requisicionesForm[j][1]+"</th>";
+                                            i=j;
+                                        }
+                                    }
+                                    plantillaDeTexto=plantillaDeTexto+cabeceras;
+                                    cabeceras=cabeceras+"";
+                                    plantillaDeTexto=plantillaDeTexto+fragmentoTabla2;
+                                    for (int j=0;j<requisicionesForm.length;j++){
+                                        if (  requisicionesForm[j][2]!=null  &&   requisicionesForm[j][2].equals(idLista)){
+                                            valores=valores+"<td  >";
+
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.tipoTexto)){
+                                                    valores=valores+"<input type=\"text\" name=\""+requisicionesForm[j][4]+"[]\" id=\""+requisicionesForm[j][4]+"_1\" class=\"col-md-12\" onkeyup=\"calcularTotales(event);\"  >";
+                                                }
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.tipoArchivo)){
+                                                    valores=valores+"<input type=\"file\" name=\""+requisicionesForm[j][4]+"[]\" id=\""+requisicionesForm[j][4]+"_1\" class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"   >";
+                                                }
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.tipoNumero)){
+                                                    valores=valores+"<input type=\"text\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"  >";
+                                                }
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.tipoFecha)){
+                                                    valores=valores+"<input type=\"date\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"  onkeyup=\"calcularTotales(event);\"    >";
+                                                }
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.tipoTextoLargo)){
+                                                    valores=valores+"<textarea rows=\"4\" cols=\"50\" name=\""+requisicionesForm[j][4]+"[]\"  id=\""+requisicionesForm[j][4]+"_1\"   class=\"col-md-12\"   onkeyup=\"calcularTotales(event);\"    ></textarea>";
+                                                }
+
+                                                if (requisicionesForm[j][3].equals(operaciones_servicio.catalogo)){
+
+
+
+                                                    if (requisicionesForm[j][4].equals("conceptoNomina")){
+                                                                valores=valores+"<div class=\"form-group\">"+
+                                                                                                "<select id=\""+requisicionesForm[j][4]+"_1\" name=\""+requisicionesForm[j][4]+"[]\" class=\"\"  onchange=\"cambiarComboConcepto("+j+")\"    >"+
+                                                                                                    "<option value=\"\"></option>"+
+                                                                                                    conceptosLista+
+                                                                                                "</select>"+
+                                                                                            "</div>";
+                                                    }
+
+
+
+
+                                                }
+
+
+
+                                            valores=valores+"</td>";
+                                            i=j;
+                                        }
+
+                                    }
+
+                                    plantillaDeTexto=plantillaDeTexto+valores;
+
+                                    valores=valores+"";
+                                    plantillaDeTexto=plantillaDeTexto+fragmentoTabla3;
+
+                                    plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-8\">Horas Totales</span>";
+                                    plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\"horasTotal\"  id=\"horasTotal\"   class=\"col-md-4\"   >";
+
+                                    plantillaDeTexto=plantillaDeTexto+"<span class=\"col-md-8\">Total</span>";
+                                    plantillaDeTexto=plantillaDeTexto+"<input type=\"text\" name=\"costoTotal\"  id=\"costoTotal\"   class=\"col-md-4\"   >";
+
+                                    plantillaDeTexto=plantillaDeTexto+"<a href='javascript:;' class=\"col-md-2 btn btn-white btn-md bla blb \" onclick=\"agregaFila("+requisicionesForm[i][2]+");\" >Agregar <i class=\"fa fa-plus-circle\" ></i> </a>";
+                                    plantillaDeTexto=plantillaDeTexto+"<div class=\"col-md-8\"></div>";
+                                    plantillaDeTexto=plantillaDeTexto+"<a href='javascript:;' class=\"col-md-2  btn btn-white btn-md bla blb \" onclick=\"eliminaFila("+requisicionesForm[i][2]+");\" >Eliminar <i class=\"fa fa-remove\" ></i></a>";
+
+                                }
+
+
+                            }
+
+                            out.print(plantillaDeTexto);
+
+                        %>
+
+
+                        <div class="container">
+
+                            <div class="row">
+                                
+                                <a  name="Guardar" class="btn btn-secondary col-md-12" id="submit_value" onclick="validacion()"  ><i class="fa fa-caret-square-o-down" aria-hidden="true"></i>Guardar en la lista de Nomina<i class="fa fa-save" ></i> <i class="fa fa-caret-square-o-down" aria-hidden="true"></i></a>
+                                
+                  
+
+                            </div>  
+                           
+
+                            
+                        </div>
+
+                    </form>
             
-            
+                </div></div></div>
             
         </div>
 
@@ -480,29 +529,68 @@
                       
                                 <% 
                                     
+                                    String estado="";
+                                    String estadoTexto="";
+                                    String idEstadoContrario="";
+                                    String colorContrario="";
+                                    String estadoBoton="";
+                                    String square="";
+                                    
                                     
                                     for (int i=0;i<req.length;i++){%>
                                         
+                                        <%
+                                        if (req[i][1].equals("19")){
+                                            estado="success";
+                                            estadoTexto="Sin Verificar";
+                                            idEstadoContrario="24";
+                                            colorContrario="primary";
+                                            estadoBoton="Verificar";
+                                            square="square-o";
+                                                    
+                                        }
+                                        if (req[i][1].equals("24")){
+                                            estado="primary";
+                                            estadoTexto="Vericado";
+                                            idEstadoContrario="19";
+                                            colorContrario="success";
+                                            estadoBoton="Desverificar";
+                                            square="check-square-o";
+                                        }
+                                        
+                                        %>  
                                            
                                         <div class="card border-success mb-3" >
 
                                             <div class="card-header">
 
                                                 <div class="text-left">
+                                                 
+                                                    
                                                     Registro: <%   out.println( req[i][0] + "    [ "+  req[i][2].substring(0,10) +" ]"  );%>
+                                                    
+                                                     
+                                                </div>
+                                                <div class="text-right">
+                                                 
+                                                    <%   out.println( estadoTexto  );%> :
+                                                    <a href="Servlet?controlador=verificaRegistroNomina&idRegistroNominaVerifica=<% out.println(req[i][0]); %>&verificaEstadoID=<%out.println(idEstadoContrario);%>" class="btn btn-<%out.println(colorContrario);%>" ><%out.println(estadoBoton);%> <i class="fa fa-<%out.println(square);%>"></i></a>
+                                                    
+                                                    
+                                                     
                                                 </div>
 
 
                                             </div>
 
 
-                                            <div class="card-body text-success">
+                                            <div class="card-body text-<% out.println(estado); %>">
 
 
 
 
 
-                                                <h1 class="card-title"><% out.println(req[i][9].toUpperCase()   );%></h1>
+                                                <h1 class="card-title"><% out.println(req[i][9]/*.toUpperCase() */  );%></h1>
                                               
 
 
@@ -572,10 +660,10 @@
                                                 <div class="text-right">
                                                     
                                                     <a href="#editaRegistroDeNominaModal"  class="btn btn-secondary" onclick="abreModalEdicion( <% out.print(req[i][0]); %> )"  data-toggle="modal" >Editar <i class="fa fa-edit" ></i></a>
-                                                
-                                                    <a href="Servlet?controlador=imprimeRecibo&op=<% out.print(req[i][0]);%>&sem=<%out.print(numberWeekOfYear);%>&anio=<%out.print(numberYear);%>"  class="btn btn-primary"  target="_blank" >Imprimir <i class="fa fa-print" ></i></a>
-                                                
-                                                    <a href="#borrarRegistroDeNominaModal"  class="btn btn-danger" onclick="borraRegistroDatos( <% out.print(req[i][0]); %> ,'<% out.print(req[i][9].toUpperCase() ); %>'    )"   data-toggle="modal">Borrar <i class="fa fa-trash" ></i></a>
+                                                    <% if (req[i][1].equals("24")){ %>
+                                                        <a href="Servlet?controlador=imprimeRecibo&op=<% out.print(req[i][0]);%>&sem=<%out.print(numberWeekOfYear);%>&anio=<%out.print(numberYear);%>"  class="btn btn-primary"  target="_blank" >Imprimir <i class="fa fa-print" ></i></a>
+                                                    <% } %>
+                                                    <a href="#borrarRegistroDeNominaModal"  class="btn btn-danger" onclick="borraRegistroDatos( <% out.print(req[i][0]); %> ,'<% out.print(req[i][9]/*.toUpperCase() */  ); %>'    )"   data-toggle="modal">Borrar <i class="fa fa-trash" ></i></a>
                                                 
                                                 </div>
 
@@ -588,12 +676,15 @@
                              
                                     
                                     
+                
+                                    
+                                    
                 <div class="container">
                  
              
                     <div class="row">
-                        <h3 class="col-md-6"><span>Nomina Total</span></h3>
-                        <input type="text" name="totalNomina" id="totalNomina" class="col-md-6" value="<%  out.println(NominaTotal); %>"  disabled="true" >
+                        <h1 class="col-md-12"><span>Nomina Total $<input type="text" name="totalNomina" id="totalNomina" class="col-md-6" value="<%  out.println(NominaTotal); %>"  disabled="true" ></span></h1>
+                        
                     </div>     
              
                 </div>
@@ -601,10 +692,12 @@
                 
     </div>
 </div>
-                                    
+            
 
-<div id="editaRegistroDeNominaModal" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
-    <div class="modal-dialog">
+
+
+<div id="selecccionaEmpleadoModal" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="ol">
@@ -612,18 +705,97 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             
-            <form id="editaRegistroNominaForm" action = "Servlet?controlador=borrarRegistroNomina" method = "post" >
                 <div class="modal-body">
                     
-                    
-                    <div id="textoEditaRegistroNomina"></div>
-                   
+                    <div class="form-group col-md-12">
+                        
+                        
+                        
+                        <span class="col-md-12">Lugar</span>
+                        <br>
+                        <select id="lugarSeleccion" name="lugarSeleccion" class="form-control col-md-12" >
+                            <option value="" selected disable>Selecciona Lugar</option>
+                            
+                            <%
+                                
+                            L = new lugar_servicio();
+                            String lugaresSeleccion[][]=L.listaLugares();    
+                                
+                            for (int j=0;j<lugaresSeleccion.length;j++){
+                                out.println("<option value=\""+lugaresSeleccion[j][0]+"\" >"+lugaresSeleccion[j][1]+"</option>");
+                            }
+                            %>
+                  
+                        </select>
+                        
+                        
+                        <span class="col-md-12">Buscar</span>
+                        <br>
+                        <input type="text" class="col-md-8 " id="buscarFiltro" name="buscarFiltro">
+                        <input type="button" class="btn btn-md btn-info col-md-3 "  id="botonBuscarPersona" value="Buscar" onclick="buscaEmpleado()"/>
+                       
+                        
+                        
+                        
+                        
+                        
+                        <select id="SeleccionarSinNomina" name="SeleccionarSinNomina" class="mdb-select md-form col-md-12" size="10" >
+                            <% out.println(opcionesFaltantes); %>
+                            
+                        </select>
+                        
+                        
+                        <hr>
+                        
+                        <span class="col-md-12  text-success">Ya en nomina</span>
+                        <select id="SeleccionarNomina" class="mdb-select md-form col-md-12" size="10" disabled>
+                            <% out.println(opcionesYaSeleccionadas); %>
+                        </select>
+                        
+                    </div>
 
+                    <input type="hidden" id="idRegistroNomina" name="idRegistroNomina" value="" />
+                    
+                    <hr>
+                    
+                    <a  name="selecciona" class="btn btn-info col-md-12" data-dismiss="modal" onclick="seleccionado()"  >Selecciona <i class="fa fa-hand-o-up" aria-hidden="true"></i> </a>
+                    <br>
+                    <button type="button" class="btn btn-secondary col-md-12" data-dismiss="modal">Cancelar</button>
+                    
 
                 </div>
+                
+        </div>
+    </div>
+</div> 
+                    
+                
+
+
+
+
+
+<div id="editaRegistroDeNominaModal" class="cb fade" tabindex="-1" role="dialog" aria-labelledby="bmp">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="ol">
+                <h4 class="modal-title" id="myModalLabel"><span></span></h4>
+                 <a class="close"  href="Servlet?controlador=verListaDeNomina">×</a>
+               
+            </div>
+            
+            <form id="editaRegistroNominaForm" action = "Servlet?controlador=editaRegistroNomina" method = "post" enctype = "multipart/form-data"  >
+                
+                
+                 <input type="hidden" name="idUsuarioEditar" class="col-md-6"  value="<% out.print(idUsuario); %>" >
+                
+                <div class="modal-body">
+                    <div id="textoEditaRegistroNomina"></div>
+                </div>
                 <div class="om">
-                    <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
-                    <input type="button" class="btn btn-md btn-success"  id="botonElimintarRegistroNomina" value="Eliminar" onclick="checkSubmit()"/>
+                    <a class="btn btn-md btn-link" href="Servlet?controlador=verListaDeNomina">Cancelar</a>
+                    <input type="button" class="btn btn-md btn-warning"  id="botonEditarRegistroNomina" value="Editar" onclick="checkSubmitEditar()"/>
                 </div>
             </form>
         </div>
@@ -652,7 +824,7 @@
                        
                     </div>
 
-                    <input type="hidden" id="idRegistroNomina" name="idRegistroNomina" value="" />
+                    <input type="hidden" id="idRegistroNominaBorrar" name="idRegistroNominaBorrar" value="" />
                     
                    
 
@@ -660,7 +832,7 @@
                 </div>
                 <div class="om">
                     <button type="button" class="ce kh" data-dismiss="modal">Cancelar</button>
-                    <input type="button" class="btn btn-md btn-success"  id="botonElimintarRegistroNomina" value="Eliminar" onclick="checkSubmit()"/>
+                    <input type="button" class="btn btn-md btn-danger"  id="botonElimintarRegistroNomina" value="Eliminar" onclick="checkSubmit()"/>
                 </div>
             </form>
         </div>
@@ -676,6 +848,11 @@
     
     
     $(document).ready(function(){
+    
+    
+        
+
+
     
         var semana=new Date().getWeekNumber()
         var diaSemana=new Date().getDay();
@@ -720,10 +897,24 @@
     }); 
     
     
+    function seleccionado(){
+    
+    
+    
+        var seleccion=document.getElementById("SeleccionarSinNomina").value ;
+        
+        
+        $("#personaNomina").val(seleccion);
+    
+    
+        cambiarComboPersona();
+    }
+    
     function borraRegistroDatos(idRegistro,nombre){
         
         
-        document.getElementById("idRegistroNomina").value = idRegistro;
+        
+        document.getElementById("idRegistroNominaBorrar").value = idRegistro;
         document.getElementById("nombreNominaBorrar").value = nombre;
         
         
@@ -733,19 +924,118 @@
     function checkSubmit() {
         
         
+       
         document.getElementById("botonElimintarRegistroNomina").value = "Enviando...";
         document.getElementById("botonElimintarRegistroNomina").disabled = true;
-        
         document.getElementById("borrarRegistroNominaForm").submit();
               
+        
               
+        return true;
+    }
+    
+    function checkSubmitEditar() {
+        
+        
+        
+        document.getElementById("botonEditarRegistroNomina").value = "Enviando...";
+        document.getElementById("botonEditarRegistroNomina").disabled = true;            
+     
+        
+        var valido=1;
+         
+        
+        var v1 = document.getElementById("fechaNomina").value;
+        if (v1 == '' ){
+            valido=0;
+            alert("Por favor llena la Fecha de la Nomina");
+        }
+        
+        var v2 = document.getElementById("SemanaNomina").value;
+        if (v2 == '' ){
+            valido=0;
+            alert("Por favor llena la Semana de la Nomina");
+        }
+        
+        var v3 = document.getElementById("anioNomina").value;
+        if (v3 == '' ){
+            valido=0;
+            alert("Por favor llena el Año de la Nomina");
+        }
+        
+      
+        
+        
+        
+        var var1;
+        var var2;
+        var var3;
+        
+        
+        
+                                                
+        
+        for (var i = 1; i <= numeroFilas ; i++) { 
+          
+            var1=document.getElementById("conceptoNomina_"+i).value ;  
+            
+            if (var1 == ''){
+                valido=0;
+                alert("Por favor llena todos los Conceptos.");
+                break;
+            }
+            
+            
+            var2=document.getElementById("cantidadNomina_"+i).value ;  
+            
+            if (var2 == ''){
+                valido=0;
+                alert("Por favor llena todas las cantidades.");
+                break;
+            }
+            
+            var3=document.getElementById("ImporteNomina_"+i).value ;  
+            
+            
+            if (var3 == ''){
+                valido=0;
+                alert("Por favor llena el importe.");
+                break;
+            }
+            
+             
+        }
+        
+        if (valido==1){
+            document.getElementById("editaRegistroNominaForm").submit();
+        }
+        else{
+            
+            
+            document.getElementById("botonEditarRegistroNomina").value = "Editar";
+            document.getElementById("botonEditarRegistroNomina").disabled = false;            
+           
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         return true;
     }
     
     
     
+    
     function calcularTotales(e){
         
+        
+      
         
         
         if (e != null){
@@ -754,7 +1044,9 @@
             var elemento=e.srcElement.id;
             var res = elemento.split("_");
             var valor_numerico=isNaN(   document.getElementById(elemento).value  );
-        
+         
+            
+           
         
             var idLugar=document.getElementById("idLugarPersonaSeleccionada").value;
             var concepto=document.getElementById("conceptoNomina_"+res[1]).value;
@@ -797,7 +1089,7 @@
 
                 if (!valor_numerico){
 
-                    document.getElementById("ImporteNomina_"+res[1]).value =document.getElementById("cantidadNomina_"+res[1]).value * precio;//document.getElementById("Cantidad_"+res[1]).value;
+                    document.getElementById("ImporteNomina_"+res[1]).value =document.getElementById("cantidadNomina_"+res[1]).value * precio;//
                     document.getElementById(elemento).value
 
                 }else{
@@ -809,14 +1101,14 @@
         }
         
         
-        
-       
         var total=0;
         var horas=0;
         for (var i=1;i<=numeroFilas;i++){
             total=Number(total)+Number(   document.getElementById("ImporteNomina_"+i).value    ) ;  
             horas=Number(horas)+Number(   document.getElementById("cantidadNomina_"+i).value    ) ;
         }
+        
+      
         document.getElementById("costoTotal").value = total;
          document.getElementById("horasTotal").value = horas;
         
@@ -949,7 +1241,89 @@
         
     }
     
+    
+    
+    function buscaEmpleado(){
+        
+        var select = document.getElementById("SeleccionarSinNomina");
+        
+        
+        <% for (int j=0;j<empleado.length;j++){ %>
+            select.remove(0);
+         <% } %>
+        
+       /* 
+        var min = 12,
+            max = 100;
+
+
+        for (var i = min; i<=max; i++){
+            var opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = i;
+            select.appendChild(opt);
+        }
+        
+        */
+    
+    
+        var lugarSeleccion=document.getElementById("lugarSeleccion").value;
+        
+
+        
+        var buscarFiltro=document.getElementById("buscarFiltro").value;
+         
+        
+        $.post('Servlet', {
+                                controlador : "buscaEmpleado",
+                                lugarSeleccion : lugarSeleccion,
+                                buscarFiltro : buscarFiltro
+                                
+                            }, function(responseText) {
+                               
+                               
+                           
+                               var empleados=JSON.parse(responseText);
+                               
+                               for (var i=0;i<empleados.employees.length;i++){
+                                   
+                                    var opt = document.createElement('option');
+                                    opt.value = empleados.employees[i][1];
+                                    opt.innerHTML = empleados.employees[i][0];
+                                    select.appendChild(opt);
+                                }
+                               
+                               
+                               
+                               
+                             
+                                
+                            }
+                );
+        
+        
+       
+        
+        
+    }
+    
+    
+    
     function  abreModalEdicion(idOperacion){
+        
+        
+         $("idLugarPersonaSeleccionada").remove();
+         $("#costoTotal").remove();
+         
+        
+        var numero=numeroFilas;
+        for (var i=0;i<numero;i++){
+             
+            eliminaFila(5);
+         
+        }
+        
+         $("#tabla5").remove();
         
         
         
@@ -959,13 +1333,28 @@
                             }, function(responseText) {
                                
                                $('#textoEditaRegistroNomina').html(responseText);
+                               
+                                numeroFilas=Number(document.getElementById("nuevoNumeroDeFilas").value);
+                              
+                                
                             }
                 );
+        
+        
+       
+        
+        
+       
         
     }
     
     function cambiarComboPersona() {
-        var IDPersona = document.getElementById("personaNomina").value;
+        
+         var IDPersona = document.getElementById("personaNomina").value;
+      
+        
+        
+       
         //document.getElementById("valoresPersona").innerHTML = "You selected: " + IDPersona;
         
         
@@ -1009,7 +1398,10 @@
     
     
     function agregaFila(tabla) {
+       
         numeroFilas=numeroFilas+1;
+        
+        
         var table = document.getElementById("tabla"+tabla);
         var row = table.insertRow(numeroFilas);
         
@@ -1091,7 +1483,9 @@
     function validacion() {
         
         document.getElementById("submit_value").value = "Enviando...";
-        document.getElementById("submit_value").disabled = true;
+        $("#submit_value").attr('onclick', '');
+        
+        //document.getElementById("submit_value").disabled = true;
         
         var valido=1;
          
@@ -1114,7 +1508,13 @@
             alert("Por favor llena el Año de la Nomina");
         }
         
-      
+        var v4 = document.getElementById("personaNomina").value;
+        if (v4==""){
+             valido=0;
+            alert("Por favor selecciona una persona");
+        }
+         
+        
         
         
         
@@ -1163,9 +1563,10 @@
         else{
             document.getElementById("submit_value").value = "Guardar";
             document.getElementById("submit_value").disabled = false;
+            $("#submit_value").attr('onclick', 'validacion()');
         }
         
-        
+       
             
     }
 
@@ -1178,4 +1579,4 @@
                               
 
 
-<jsp:include page="../pieDePagina.jsp" flush="true"/>
+<jsp:include page="../pieDePagina.jsp" flush="true"/>                

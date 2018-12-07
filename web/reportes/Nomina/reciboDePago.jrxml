@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reciboDePago" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="10117c5e-7a60-4872-b23c-d2185d405114">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="39"/>
+	<property name="ireport.y" value="69"/>
 	<parameter name="fecha" class="java.lang.String"/>
 	<parameter name="semana" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -71,7 +71,7 @@ LEFT JOIN 	(
 	INNER JOIN persona p on (p.idPersona = co7.valorTexto)
 	INNER JOIN personalugar pl on (pl.Persona_idPersona=p.idPersona)
 	INNER JOIN lugar l on (l.idLugar=pl.Lugar_idLugar)
-	INNER JOIN requisitos r on (r.idPersona = p.idPersona and r.idVariableAlmacenamiento=4)
+	LEFT JOIN requisitos r on (r.idPersona = p.idPersona and r.idVariableAlmacenamiento=4)
 
    ) AS valor7   ON o.idOperacion  =  valor7.idOperacion
 
@@ -79,7 +79,7 @@ LEFT JOIN 	(
 
 WHERE
 o.idCatalogoOperacion  IN (  22  )
-AND   o.idEstadoOperacion IN (19)
+AND   o.idEstadoOperacion IN (24)
 AND o.idOperacion=$P{operacion}
 AND valor1=$P{semana}
 AND valor2=$P{anio}
@@ -389,7 +389,7 @@ ORDER BY o.idOperacion DESC, o.fechaCreacion DESC    ;]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="83">
+		<band height="113">
 			<staticText>
 				<reportElement mode="Opaque" x="236" y="0" width="144" height="39" backcolor="#CCCCFF" uuid="04dd6f97-2c6e-4162-ab85-6298e8d8c071"/>
 				<box>
@@ -415,12 +415,12 @@ ORDER BY o.idOperacion DESC, o.fechaCreacion DESC    ;]]>
 				<text><![CDATA[ * NO INCLUYE DESCUENTO DE IMSS E  IMPUESTOS EN LA PERCEPCIÖN TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="293" y="63" width="279" height="20" uuid="7147b673-db1b-4ac3-ae19-fe420314b18b"/>
+				<reportElement x="293" y="93" width="279" height="20" uuid="7147b673-db1b-4ac3-ae19-fe420314b18b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[FIRMA DEL EMPLEADO]]></text>
 			</staticText>
 			<line>
-				<reportElement x="293" y="62" width="279" height="1" uuid="241c91ea-6ad6-47de-9924-757f325ac0b6"/>
+				<reportElement x="293" y="92" width="279" height="1" uuid="241c91ea-6ad6-47de-9924-757f325ac0b6"/>
 			</line>
 			<textField>
 				<reportElement mode="Opaque" x="380" y="0" width="192" height="39" backcolor="#FFFF00" uuid="736ad231-a70d-44d2-a67b-8be4dd377090"/>

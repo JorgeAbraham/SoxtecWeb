@@ -49,8 +49,14 @@ public class Servlet extends HttpServlet {
        
     public HttpSession SignInBD(String Email, String Pass, String idUsuario, HttpSession session ){
         usuario_servicio servicioAcceso=new usuario_servicio();
-        idUsuario=servicioAcceso.acceso(Email, Pass);
-
+        
+        try{
+            idUsuario=servicioAcceso.acceso(Email, Pass);
+        }catch(Exception e){
+            M=new ManejadorDeDatos();
+        }
+        
+        
         if (idUsuario!=null){
             if (!idUsuario.equals("")){
                 session.setAttribute("idUsuario", idUsuario );
@@ -98,7 +104,16 @@ public class Servlet extends HttpServlet {
                 peticiones_web_servicio peticion=new peticiones_web_servicio();
                 peticion.setNombreVista(request.getParameter("controlador"));
                 peticion.setIdUsuario(idUsuario);
-                peticion.getVistasPorNombre();
+                
+                
+                try{
+                    M=new ManejadorDeDatos();
+                    peticion.getVistasPorNombre();
+                }catch(Exception e){
+                    M=new ManejadorDeDatos();
+                }
+                
+               
                 
                 if (peticion.getControlador()==null){  //No coincide el login, vuelve a mostrar login
                     

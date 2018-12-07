@@ -74,7 +74,7 @@
                                         } 
                                     } 
 
-                                    if (   valorEstado==null ||  valorEstado.equals("") || valorEstado.equals("sinDefinir") || valorEstado.equals("ingresado")   ){ %>
+                                    if (   valorEstado==null ||  valorEstado.equals("") || valorEstado.equals("sinDefinir") || valorEstado.equals("ingresado")   ){ valorEstado=""; %>
                                         <a href="#editEstado"  class="btn btn-info" onclick="seleccionaEstado(<%   out.print(id);  %> , <%  out.print(documentos[i][0]);  %>  )"   data-toggle="modal">Sin definir <i class="fa fa-question" ></i></a>
                                     <% }else{ %>
                                     
@@ -150,7 +150,7 @@
                         <% if (valorEstado.equals("alta")){  %>
                             <a href="#peticionParoTecnico"  class="btn btn-md bla blb" onclick="peticionParoTecnico( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Paro Técnico <i class="fa fa-pause-circle" ></i></a>
                         <%}%>
-                        <% if (valorEstado.equals("paroTecnico")){  %>
+                        <%if (valorEstado.equals("paroTecnico")){  %>
                             <a href="#peticionActivo"  class="btn btn-success" onclick="peticionActivo( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Restituir como Activo <i class="fa fa-arrow-circle-o-up" ></i></a>
                         <%}%>
                         <a href="#peticionBaja"  class="btn btn-warning" onclick="peticionDeBaja( <%   out.print(id);  %> , 30  )"   data-toggle="modal">Solicitud de Baja <i class="fa fa-arrow-circle-down" ></i></a>
@@ -272,7 +272,7 @@
                                                         // Outputs "SGVsbG8="
                                                 %>
 
-                                                    <img width="190" height="325" src="data:image/png;base64, <%  out.print(    codec.encode(  archivo.getContenido()    )   ); %>" alt="Red dot" />
+                                                    <img width="190" height="325" src="data:image/png;base64, <%  if (archivo.getContenido()!=null){   out.print(     codec.encode(  archivo.getContenido()    )    );  }   %>" alt="Red dot" />
                                                 <%  }else{  %>
                                                     <img src="imagenes\no-photo1.png" width="250" height="325" >
                                                 <% } %>

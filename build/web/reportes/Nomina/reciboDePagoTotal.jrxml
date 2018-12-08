@@ -68,7 +68,7 @@ LEFT JOIN 	(
 	INNER JOIN persona p on (p.idPersona = co7.valorTexto)
 	INNER JOIN personalugar pl on (pl.Persona_idPersona=p.idPersona)
 	INNER JOIN lugar l on (l.idLugar=pl.Lugar_idLugar)
-	INNER JOIN requisitos r on (r.idPersona = p.idPersona and r.idVariableAlmacenamiento=4)
+	LEFT JOIN requisitos r on (r.idPersona = p.idPersona and r.idVariableAlmacenamiento=4)
 
    ) AS valor7   ON o.idOperacion  =  valor7.idOperacion
 

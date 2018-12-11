@@ -35,11 +35,15 @@ public class Servlet extends HttpServlet {
     public static ManejadorDeDatos M;
     
     @Override
-    public void init(ServletConfig config) throws ServletException 
+    public void init(ServletConfig config) 
     {
         
         
-        super.init(config);
+        try {
+            super.init(config);
+        } catch (ServletException ex) {
+            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         M=new ManejadorDeDatos();
      
         
